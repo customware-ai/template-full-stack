@@ -1,156 +1,121 @@
-# Backend Integration Reference for React Router App with Tailwind CSS and SQLite
+# Full-Stack Reference Template for React Router + Hono + tRPC + SQLite
 
-**This is a reference and file/config storage repository for backend integration.** Use it as the canonical source for backend patterns, project structure, packages, configs, starter files, and test setup when converting a generated client-only app into the standard Customware backend-enabled stack.
+**This is a reusable full-stack template** with a working `app/` shell, backend reference implementation, and tested conventions for TypeScript, contracts, and project boundaries.
 
-The repository demonstrates the approved stack with React Router v7, TypeScript, Tailwind CSS, Hono, tRPC, and SQLite via Drizzle + better-sqlite3. The `app/` shell is still a starter surface, but the main purpose of this repo is to give agents and developers one place to check how backend integration should be done and to copy the needed backend files, configs, package entries, and library choices from here instead of inventing them ad hoc.
+It is designed as the baseline for building real applications, not as a shipped product.  
+Use the code as copy-ready examples for architecture, conventions, and implementation patterns.
 
-> **⚠️ Important**: This is a **reference repository**, not a feature-complete product and not the business source of truth for any shipped app.
->
-> During backend integration work, agents should use this repo to:
-> - clarify doubts about the intended backend stack and structure
-> - copy/adapt backend files and folders
-> - copy/adapt config files and package dependencies
-> - copy/adapt unit-test and end-to-end test setup, patterns, and supporting files
-> - follow the established transport, database, contract, and service patterns
-> - follow the established testing stack and quality-gate conventions
-> - avoid hunting across unrelated repos for backend setup decisions
+> **⚠️ Important**: This repository is a **template and reference**, not a domain-complete business application.
 
-> **Required reading**: Review [AGENTS.md](./AGENTS.md) before development for commands, coding standards, and architecture rules.
+## 📋 What This Template Is
 
-## 📋 What This Template Provides
+- **Full-stack starting point** with React Router SPA + Hono + tRPC + Drizzle + better-sqlite3
+- **Template codebase** you can copy/adapt for new client projects
+- **Pattern-first structure** for contracts, queries, services, routes, and provider wiring
+- **Quality standard** baseline with static checks, tests, and migration workflow
 
-### ✅ Use This Template For:
+## ✅ Use This Template For
 
-- **Code Style Reference** - TypeScript + React + Tailwind conventions
-- **Architecture Patterns** - Clean layering (contracts → queries → services → routes)
-- **Type Safety Examples** - Zod contracts + neverthrow error handling
-- **UI Component Library** - Reusable, tested UI primitives
-- **Database Patterns** - Drizzle schema + migration workflow
-- **Project Organization** - Scalable app/server/test directory structure
-- **Backend Integration Source** - the canonical place to copy backend files, configs, packages, and conventions from
-- **Testing Reference Source** - the canonical place to copy/adapt unit and end-to-end testing setup from during backend integration
+- Studying and reusing full-stack architecture
+- Copying backend/frontend integration patterns
+- Aligning on project organization, package choices, and test strategy
+- Adapting typed API contracts and boundary-driven code
 
-### ❌ This Template Does NOT Provide:
+## ❌ This Template Does Not Provide
 
-- A complete business product
-- Domain-complete ERP/accounting features
-- Ready-to-ship production logic without adaptation
+- A complete business solution
+- Domain-owned workflows or production-ready application behavior
+- A drop-in final application without adaptation
 
-### 💡 How to Use This Template:
+## 🔧 What It Includes
 
-1. Study the patterns in `app/`, `server/`, and `tests/`
-2. Use this repo as the first place to resolve uncertainty about backend integration choices
-3. Copy or adapt the needed backend files, configs, dependency entries, and structure into your own project
-4. Copy or adapt the needed unit-test and end-to-end test files, helpers, and dependency setup from this repo
-5. Replace the sample business module shapes with the consuming app's real domain logic
-6. Keep strict contracts and Result-based error handling
-7. Follow [AGENTS.md](./AGENTS.md) for development workflow
+- A client-facing shell in `app/` with reusable UI and route patterns
+- A backend reference module in `server/` (contracts, queries, services, tRPC router, and migration wiring)
+- Database-first migration flow using Drizzle and SQLite
+- Shared quality patterns in tests, linting, and type safety
 
-## 🔍 What's Working vs What's a Pattern
+## 💡 How to Use
 
-### ✅ Fully Functional (Study These):
+- Study the template structure in `app/`, `server/`, and `tests/`
+- Copy or adapt the backend and frontend slices needed for your project
+- Replace the example domain module with your own contracts and business rules
+- Extend existing conventions rather than changing foundational architecture decisions
+- Keep the same coding standards described in [AGENTS.md](./AGENTS.md)
 
-- **UI shell and workflow pages** - Shared `MainLayout` + route-backed CPQ workflow shell
-- **Backend reference slice** - `estimate` contract/query/service/tRPC route chain, kept as reference wiring only
-- **Database layer** - Drizzle schema + generated SQL migrations + runner
-- **Quality gates** - Typecheck, lint, build, and test workflows
-- **Component library** - Tested reusable UI building blocks
+## 🔍 Full-Stack Reference Slice
 
-### 📐 Pattern Scaffolding:
+The repository is intentionally compact but complete in pattern:
 
-- **tRPC client/provider files in `app/lib/`** - Available as typed integration scaffolding
-- **Backend note** - The `server/` files are intentionally reference-only until a consuming project swaps in its own API contract
-- **Single-module backend design** - Intentionally minimal for extension
+- `app/` demonstrates typed routing, reusable UI, and layout wiring
+- `server/contracts/` provides runtime validation contracts
+- `server/db/queries/` provides data access
+- `server/services/` provides business orchestration
+- `server/trpc/` provides API boundaries
+- `tests/` demonstrates how to structure and test core pieces at each boundary
 
-## Backend Integration Role
+The point is to preserve proven structure and standards while replacing domain logic for real products.
 
-This repository exists so backend integration is predictable.
+## Template Features
 
-When converting a client-only generated project into a backend-enabled project, use this repo as the canonical reference for:
-
-- backend stack selection
-- package and library choices
-- config file shape
-- `server/` directory layout
-- test directory layout
-- Hono + tRPC transport setup
-- Zod contract placement
-- neverthrow service/query patterns
-- Drizzle + SQLite setup and migration flow
-- unit-test setup and patterns
-- end-to-end test setup and patterns
-- validation and quality-gate conventions
-
-The goal is not to copy the sample domain module literally. The goal is to reuse the stack, file layout, configuration patterns, backend conventions, and testing setup so agents do not need to improvise a backend architecture or test strategy from scratch.
-
-## Template Features & Patterns
-
-This template demonstrates:
-
-- **Modern Stack**: React Router SPA mode with Hono + tRPC backend, Vite 8, strict TypeScript
-- **Type Safety**: Zod runtime contracts + neverthrow Result/ResultAsync patterns
-- **Database Layer**: better-sqlite3 + Drizzle ORM with migration-driven schema changes
-- **UI Patterns**: Tailwind CSS v4 with reusable components and a shared app layout
-- **Workflow Engine**: CPQ workflow data drives stages, steps, progress, and page routing
-- **Code Quality**: Type-aware linting (oxlint) + Vitest coverage
-- **Architecture**: Explicit client/server boundary with typed API contracts
+- **Architecture**: React Router v7 SPA mode + Hono API server + tRPC transport
+- **Type Safety**: Zod contracts + neverthrow `Result` patterns
+- **Data Layer**: SQLite (`better-sqlite3`) with Drizzle migrations
+- **Component System**: Tailwind v4 + reusable UI primitives
+- **Quality Gates**: typecheck, lint, and Vitest test baseline
+- **Template Scope**: workflow shell scaffold, not a finished product workflow implementation
 
 ## Workflow Shell
 
-This template is set up as a **CPQ template built around a workflow system**.
+This template ships with a neutral workflow UI shell:
 
-- The left workflow rail is organized into **stages**
-- Each stage contains **steps**
-- Each step has its own **route-backed page**
-- Clicking a stage expands or collapses it
-- Clicking a step navigates to that step page
-- Each step page includes a **proceed action** that advances to the next step, and then into the next stage when needed
+- left rail organizes stages and steps
+- step routes are route-backed
+- navigation advances through stages and steps
+- proceed actions support predictable flow transitions
 
-The template ships with a neutral workflow shell so the shell renders without business-specific data. The workflow engine is **not** limited to any fixed stage or step count; teams can add, remove, or rename stages and steps by changing the workflow data shape.
+The workflow behavior is intentionally lightweight and data-driven so teams can replace the source data and persistence strategy without changing the shell.
 
-Today the workflow state is stored locally in browser storage so the template works without backend setup. Teams building on top of this template can keep the same workflow/page structure and replace the local storage source with their own database-backed workflow data.
-
-The workflow behavior itself now lives in a separate core module, `app/lib/workflow-engine.ts`. The CPQ data layer feeds stage/step definitions into that engine, and the current template persists the runtime state in local storage. Teams can keep the same engine and swap only the data source, or move the same engine concepts to the backend if they want the workflow to execute server-side.
+The current state is seeded for development and demonstration. It is not a product-default dataset.
 
 ## Tech Stack
 
-| Package               | Version       | Purpose                         |
-| --------------------- | ------------- | ------------------------------- |
-| react-router          | 7.13.0        | Client routing framework        |
-| vite                  | 8.0.0-beta.13 | Build tool                      |
-| hono                  | ^4.12.1       | HTTP server                     |
-| @trpc/server          | ^11.10.0      | Type-safe API layer             |
-| @trpc/react-query     | ^11.10.0      | Typed client hooks              |
-| @tanstack/react-query | ^5.90.21      | Query/mutation state management |
-| tailwindcss           | 4.1.18        | Styling                         |
-| zod                   | 4.3.6         | Schema validation               |
-| neverthrow            | 8.2.0         | Type-safe error handling        |
-| vitest                | 4.0.18        | Testing framework               |
-| oxlint                | 1.47.0        | Type-aware linting              |
-| better-sqlite3        | ^12.6.2       | SQLite runtime                  |
-| drizzle-orm           | ^0.45.1       | ORM and query builder           |
-| drizzle-kit           | ^0.31.9       | Migration generation and tooling |
+| Package               | Version  | Purpose                         |
+| --------------------- | -------- | ------------------------------- |
+| react-router          | 7.14.0   | Client routing framework        |
+| vite                  | 8.0.7    | Build tool                      |
+| hono                  | ^4.12.1  | HTTP server                     |
+| @trpc/server          | ^11.10.0 | Type-safe API layer             |
+| @trpc/react-query     | ^11.10.0 | Typed client hooks              |
+| @tanstack/react-query | ^5.90.21 | Query/mutation state management |
+| tailwindcss           | 4.1.18   | Styling                         |
+| zod                   | 4.3.6    | Runtime validation              |
+| neverthrow            | 8.2.0    | Type-safe error handling        |
+| vitest                | 4.0.18   | Unit/integration test framework |
+| oxlint                | 1.59.0   | Type-aware linting              |
+| better-sqlite3        | ^12.6.2  | SQLite runtime                  |
+| drizzle-orm           | ^0.45.1  | ORM and query builder           |
+| drizzle-kit           | ^0.31.9  | Migration generation            |
 
 ## 🎨 Design
 
-- **UI Components**: shadcn/ui-style primitives
-- **Color System**: professional neutral base with clear status states
-- **Typography**: clean, readable hierarchy for dashboard-style layouts
-- **Layout**: shared shell via `app/layouts/MainLayout.tsx`
+- **UI Primitives**: shadcn/ui-style component set
+- **Layout**: shared shell in `app/layouts/MainLayout.tsx`
+- **Styling**: Tailwind v4 utility patterns with design tokens
+- **Direction**: scalable dashboard/workflow styling baseline
 
 ## 🚀 Quick Start
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Generate and apply SQL migrations
-npm run db:generate
-npm run db:migrate
+pnpm run db:generate
+pnpm run db:migrate
 
 # Build and run
-npm run build
-npm run start
+pnpm run build
+pnpm run start
 ```
 
 ## 📁 Project Structure
@@ -164,36 +129,34 @@ app/
 ├── layouts/
 │   └── MainLayout.tsx         # Shared page shell + header
 ├── lib/
-│   ├── workflow-engine.ts     # Pure workflow progression + derivation engine
-│   ├── trpc.ts                # Typed tRPC client type binding
-│   ├── trpc-provider.tsx      # Typed provider scaffolding
+│   ├── workflow-engine.ts     # Workflow progression engine
+│   ├── trpc.ts                # Typed tRPC client
+│   ├── trpc-provider.tsx      # Typed provider composition
 │   └── utils.ts
 ├── routes/
-│   ├── index.tsx              # Root redirect into the active workflow step
-│   └── workflow.$stepId.tsx   # Route-backed workflow step page
+│   └── index.tsx              # Default route
 ├── routes.ts                  # Route definitions
-└── root.tsx
+└── root.tsx                   # Root route entry for React Router
 
 server/
 ├── contracts/
-│   ├── estimate.ts            # Reference Zod runtime contracts for the backend slice
+│   ├── estimate.ts            # Reference domain contract
 │   └── index.ts
 ├── db/
-│   ├── index.ts               # Reference Drizzle + better-sqlite3 init for the backend slice
-│   ├── schemas.ts             # Sample Drizzle table schema
+│   ├── index.ts               # Drizzle + better-sqlite3 init
+│   ├── schemas.ts             # Sample Drizzle schema
 │   ├── queries/
-│   │   └── estimates.ts       # Sample query layer (ResultAsync)
-│   ├── migrations/            # Generated SQL + drizzle metadata
-│   └── migrate.ts             # Reference migration runner for the backend slice
+│   │   └── estimates.ts       # Sample data-access layer
+│   ├── migrations/            # Generated SQL + metadata
+│   └── migrate.ts             # Migration runner
 ├── services/
-│   └── estimate.ts            # Reference business logic for the backend slice
+│   └── estimate.ts            # Reference business orchestration
 ├── trpc/
-│   └── router.ts              # Reference API procedures for the backend slice
+│   └── router.ts              # Reference API procedures
 ├── types/
-│   └── errors.ts              # Shared app error contracts
-├── index.ts                   # Reference Hono app setup for the backend slice
-├── start.ts                   # Sample server entrypoint
-└── tsconfig.json
+│   └── errors.ts              # Shared typed error contracts
+├── index.ts                   # Hono app setup
+└── start.ts                   # Server entrypoint
 
 tests/
 ├── components/                # UI component tests
@@ -201,77 +164,70 @@ tests/
 ├── layouts/                   # Layout tests
 ├── routes/                    # Route tests
 ├── services/                  # Service tests
-└── lib/                       # Utility tests
+└── unit/                      # Shared unit test utilities
 ```
 
 ## 🗄️ Database Architecture
 
-**Technology**: SQLite (`better-sqlite3`) + Drizzle ORM
+- **Technology**: SQLite (`better-sqlite3`) + Drizzle ORM
+- **Database file path**: `.dbs/database.db`
 
-**Database file path**: `.dbs/database.db`
-
-**Migration workflow**:
+Migration workflow:
 
 1. Update `server/db/schemas.ts`
-2. Run `npm run db:generate`
-3. Run `npm run db:migrate`
+2. Run `pnpm run db:generate`
+3. Run `pnpm run db:migrate`
 
-### Tables Implemented
+### Tables Included
 
 - `estimates`
 
-This intentionally keeps one reference table so teams can extend from a clean baseline.
+This keeps one reference domain table for easy adaptation.
 
 ## 📝 Scripts
 
-| Script                 | Description                          |
-| ---------------------- | ------------------------------------ |
-| `npm run build`        | Build client + server                |
-| `npm run build:client` | Build client bundle                  |
-| `npm run build:server` | Compile server TypeScript            |
-| `npm run start`        | Start production Hono server         |
-| `npm run db:generate`  | Generate Drizzle SQL migrations      |
-| `npm run db:migrate`   | Run Drizzle migrations               |
-| `npm run typecheck`    | TypeScript type checking             |
-| `npm run lint`         | Type-aware linting with oxlint       |
-| `npm test`             | Run all tests                        |
-| `npm run check`        | Run typecheck, lint, build, and test |
+| Script                | Description                           |
+| --------------------- | ------------------------------------- |
+| `pnpm run build`      | Build client + server                 |
+| `pnpm run build:client` | Build client bundle                 |
+| `pnpm run build:server` | Compile server TypeScript             |
+| `pnpm run start`      | Start production Hono server           |
+| `pnpm run db:generate`| Generate Drizzle SQL migrations       |
+| `pnpm run db:migrate` | Run migrations                        |
+| `pnpm run typecheck`  | Run TypeScript checks                 |
+| `pnpm run lint`       | Type-aware linting with oxlint         |
+| `pnpm test`           | Run Vitest suite                      |
+| `pnpm run check`      | Run `typecheck` and `lint`            |
 
 ## 🧪 Testing
 
-### Running Tests
-
 ```bash
-npm test
-npm run check
+pnpm test
+pnpm run check
 ```
 
-### Coverage Areas
+- UI/component tests
+- Route and route-layout tests
+- Database tests
+- Service-layer tests
 
-- UI components
-- App routes and layout behavior
-- Database behavior
-- Server service layer
-
-All tests use Vitest (and React Testing Library for UI).
+Unit tests use Vitest; Playwright e2e is run through the project scripts where applicable.
 
 ## 🏗️ Example Module
 
-The repository includes one cohesive backend reference module:
+The repository includes one cohesive reference backend module:
 
 - **Estimate**
-  - Contract: `server/contracts/estimate.ts`
-  - Query: `server/db/queries/estimates.ts`
-  - Service: `server/services/estimate.ts`
-  - API route: `server/trpc/router.ts`
+- Contract: `server/contracts/estimate.ts`
+- Query: `server/db/queries/estimates.ts`
+- Service: `server/services/estimate.ts`
+- API route: `server/trpc/router.ts`
 
-Use this as the canonical pattern when adding your own modules, or replace it entirely when your application ships its own API contracts and persistence.
+Use this module as a pattern to build your own domain modules.
 
 ## 📖 Documentation
 
-- [README.md](./README.md) - Project overview and quick start
-- [AGENTS.md](./AGENTS.md) - Development standards and architectural rules
+- [README.md](./README.md) - this overview
+- [AGENTS.md](./AGENTS.md) - coding standards and mandatory workflow rules
 
----
-
-This repository is designed as a reference baseline: keep the structure, extend by module, and preserve strict contracts and typed boundaries.
+This template is a reusable starting point for building full-stack products with a consistent architecture, explicit boundaries, and strong conventions. It is intentionally an example and not a finished app.
