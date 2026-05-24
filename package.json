@@ -1,7 +1,7 @@
 {
-	"name": "react-app-db",
+	"name": "template-full-stack",
 	"private": true,
-	"description": "Template React Router ERP application demonstrating coding patterns and architectural best practices from Customware AI",
+	"description": "Full Stack Template demonstrating coding patterns and full stack model from Customware AI",
 	"type": "module",
 	"scripts": {
 		"build:client": "react-router build",
