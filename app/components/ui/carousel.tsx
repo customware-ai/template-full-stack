@@ -32,7 +32,7 @@ function useCarousel(): CarouselContextValue {
 type CarouselProps = {
   opts?: EmblaOptionsType
   setApi?: (api: EmblaCarouselType) => void
-} & React.ComponentProps<"div">
+} & React.ComponentProps<"section">
 
 function Carousel({
   opts,
@@ -76,9 +76,9 @@ function Carousel({
 
   return (
     <CarouselContext.Provider value={{ carouselRef, api, scrollPrev, scrollNext, canScrollPrev, canScrollNext }}>
-      <div data-slot="carousel" className={cn("relative", className)} role="region" aria-roledescription="carousel" {...props}>
+      <section data-slot="carousel" className={cn("relative", className)} aria-roledescription="carousel" {...props}>
         {children}
-      </div>
+      </section>
     </CarouselContext.Provider>
   )
 }

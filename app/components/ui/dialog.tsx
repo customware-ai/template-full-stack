@@ -3,6 +3,7 @@
 import * as React from "react"
 import { XIcon } from "lucide-react"
 import { Dialog as DialogPrimitive } from "radix-ui"
+import type { Dialog as DialogTypes } from "radix-ui"
 
 import { cn } from "~/lib/utils"
 
@@ -48,7 +49,7 @@ DialogOverlay.displayName = "DialogOverlay"
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+  DialogTypes.DialogContentProps & {
     showCloseButton?: boolean
   }
 >(({ className, children, showCloseButton = true, ...props }, ref) => (

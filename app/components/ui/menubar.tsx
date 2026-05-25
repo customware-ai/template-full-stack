@@ -3,6 +3,7 @@
 import * as React from "react"
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 import { Menubar as MenubarPrimitive } from "radix-ui"
+import type { Menubar as MenubarTypes } from "radix-ui"
 
 import { cn } from "~/lib/utils"
 
@@ -87,7 +88,7 @@ MenubarContent.displayName = "MenubarContent"
 
 const MenubarItem = React.forwardRef<
   React.ElementRef<typeof MenubarPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Item> & {
+  MenubarTypes.MenubarItemProps & {
     inset?: boolean
   }
 >(({ className, inset, ...props }, ref) => (
@@ -153,7 +154,7 @@ MenubarRadioItem.displayName = "MenubarRadioItem"
 
 const MenubarLabel = React.forwardRef<
   React.ElementRef<typeof MenubarPrimitive.Label>,
-  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Label> & {
+  MenubarTypes.MenubarLabelProps & {
     inset?: boolean
   }
 >(({ className, inset, ...props }, ref) => (
@@ -181,7 +182,7 @@ MenubarSeparator.displayName = "MenubarSeparator"
 
 const MenubarSubTrigger = React.forwardRef<
   React.ElementRef<typeof MenubarPrimitive.SubTrigger>,
-  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubTrigger> & {
+  MenubarTypes.MenubarSubTriggerProps & {
     inset?: boolean
   }
 >(({ className, inset, children, ...props }, ref) => (

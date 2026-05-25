@@ -50,9 +50,9 @@ function Combobox({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          role="combobox"
           aria-expanded={open}
           aria-controls={listboxId}
+          aria-haspopup="listbox"
           className={cn("w-full justify-between", className)}
           disabled={disabled}
         >

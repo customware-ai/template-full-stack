@@ -6,7 +6,7 @@ describe("root hydrate fallback", () => {
   it("renders the enterprise document-stack loader instead of a spinner or shimmer bars", () => {
     const { container } = render(<HydrateFallback />);
 
-    expect(screen.getByRole("status")).toBeInTheDocument();
+    expect(container.querySelector("output[data-slot='hydrate-loader']")).not.toBeNull();
     expect(screen.getByText("Loading application")).toBeInTheDocument();
     expect(container.querySelector("[data-slot='hydrate-loader-title']")).not.toBeNull();
     expect(

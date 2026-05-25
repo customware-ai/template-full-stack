@@ -81,20 +81,20 @@ The current state is seeded for development and demonstration. It is not a produ
 
 | Package               | Version  | Purpose                         |
 | --------------------- | -------- | ------------------------------- |
-| react-router          | 7.14.0   | Client routing framework        |
-| vite                  | 8.0.7    | Build tool                      |
-| hono                  | ^4.12.1  | HTTP server                     |
-| @trpc/server          | ^11.10.0 | Type-safe API layer             |
-| @trpc/react-query     | ^11.10.0 | Typed client hooks              |
-| @tanstack/react-query | ^5.90.21 | Query/mutation state management |
-| tailwindcss           | 4.1.18   | Styling                         |
-| zod                   | 4.3.6    | Runtime validation              |
+| react-router          | 7.15.1   | Client routing framework        |
+| vite                  | 8.0.14   | Build tool                      |
+| hono                  | ^4.12.22 | HTTP server                     |
+| @trpc/server          | ^11.17.0 | Type-safe API layer             |
+| @trpc/react-query     | ^11.17.0 | Typed client hooks              |
+| @tanstack/react-query | ^5.100.14 | Query/mutation state management |
+| tailwindcss           | 4.3.0    | Styling                         |
+| zod                   | 4.4.3    | Runtime validation              |
 | neverthrow            | 8.2.0    | Type-safe error handling        |
-| vitest                | 4.0.18   | Unit/integration test framework |
-| oxlint                | 1.59.0   | Type-aware linting              |
-| better-sqlite3        | ^12.6.2  | SQLite runtime                  |
-| drizzle-orm           | ^0.45.1  | ORM and query builder           |
-| drizzle-kit           | ^0.31.9  | Migration generation            |
+| vitest                | 4.1.7    | Unit/integration test framework |
+| oxlint                | 1.66.0   | Type-aware linting              |
+| better-sqlite3        | ^12.10.0 | SQLite runtime                  |
+| drizzle-orm           | ^0.45.2  | ORM and query builder           |
+| drizzle-kit           | ^0.31.10 | Migration generation            |
 
 ## 🎨 Design
 

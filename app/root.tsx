@@ -389,7 +389,7 @@ export function HydrateFallback(): ReactElement {
   return (
     <div className="hydrate-fallback">
       <div className="hydrate-fallback__stack">
-        <div role="status" aria-live="polite" data-slot="hydrate-loader" className="hydrate-loader">
+        <output aria-live="polite" data-slot="hydrate-loader" className="hydrate-loader">
           {/**
            * The shell uses a restrained document-style loader so the initial
            * hydration state feels consistent with the rest of the layout.
@@ -406,7 +406,7 @@ export function HydrateFallback(): ReactElement {
             <div className="hydrate-loader__scan" />
           </div>
           <span className="hydrate-fallback__sr-only">Loading application</span>
-        </div>
+        </output>
         <div className="hydrate-fallback__copy">
           <p data-slot="hydrate-loader-title" className="hydrate-fallback__title">
             Preparing shell

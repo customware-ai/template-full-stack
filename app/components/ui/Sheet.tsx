@@ -3,6 +3,7 @@
 import * as React from "react"
 import { XIcon } from "lucide-react"
 import { Dialog as SheetPrimitive } from "radix-ui"
+import type { Dialog as DialogTypes } from "radix-ui"
 
 import { cn } from "~/lib/utils"
 
@@ -50,7 +51,7 @@ function SheetContent({
   side = "right",
   showCloseButton = true,
   ...props
-}: React.ComponentProps<typeof SheetPrimitive.Content> & {
+}: DialogTypes.DialogContentProps & {
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
 }): React.ReactElement {

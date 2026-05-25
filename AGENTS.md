@@ -184,21 +184,21 @@ Use npm/npx only for Playwright verification because Playwright is installed glo
 
 **Framework/runtime dependencies (current):**
 
-- `react-router@7.13.2` + `@react-router/dev@7.13.2` + `@react-router/node@7.13.2`
-- `vite@8.0.0` (with override pinned), `@vitejs/plugin-react@6.0.0`
-- `hono@^4.12.1`, `@hono/node-server@^1.19.9`, `@hono/trpc-server@^0.4.2`
-- `@trpc/server@^11.10.0`, `@trpc/client@^11.10.0`, `@trpc/react-query@^11.10.0`
-- `@tanstack/react-query@^5.90.21`
-- `better-sqlite3@^12.6.2`
-- `drizzle-orm@^0.45.1`
-- `zod@^4.3.6`, `neverthrow@8.2.0`
+- `react-router@7.15.1` + `@react-router/dev@7.15.1` + `@react-router/node@7.15.1`
+- `vite@8.0.14` (with override pinned), `@vitejs/plugin-react@6.0.2`
+- `hono@^4.12.22`, `@hono/node-server@^2.0.4`, `@hono/trpc-server@^0.4.2`
+- `@trpc/server@^11.17.0`, `@trpc/client@^11.17.0`, `@trpc/react-query@^11.17.0`
+- `@tanstack/react-query@^5.100.14`
+- `better-sqlite3@^12.10.0`
+- `drizzle-orm@^0.45.2`
+- `zod@^4.4.3`, `neverthrow@8.2.0`
 
 **Testing/lint/tooling dependencies (current):**
 
-- `vitest@4.0.18`, `@testing-library/react@16.3.0`, `@testing-library/user-event@14.6.1`
-- `oxlint@1.47.0`, `oxlint-tsgolint@latest`
-- `drizzle-kit@^0.31.9`
-- `typescript@6.0.2`, `tsx@4.21.0`
+- `vitest@4.1.7`, `@testing-library/react@16.3.2`, `@testing-library/user-event@14.6.1`
+- `oxlint@1.66.0`, `oxlint-tsgolint@0.23.0`
+- `drizzle-kit@^0.31.10`
+- `typescript@6.0.3`, `tsx@4.22.3`
 
 ## Architecture
 

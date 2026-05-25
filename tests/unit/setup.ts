@@ -27,3 +27,26 @@ if (!window.matchMedia) {
     };
   }) as typeof window.matchMedia;
 }
+
+if (!window.IntersectionObserver) {
+  window.IntersectionObserver = class IntersectionObserver implements globalThis.IntersectionObserver {
+    readonly root = null;
+    readonly rootMargin = '';
+    readonly thresholds = [];
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+    unobserve(): void {}
+  };
+}
+
+if (!window.ResizeObserver) {
+  window.ResizeObserver = class ResizeObserver implements globalThis.ResizeObserver {
+    disconnect(): void {}
+    observe(): void {}
+    unobserve(): void {}
+  };
+}

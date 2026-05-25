@@ -3,6 +3,7 @@
 import * as React from "react"
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 import { ContextMenu as ContextMenuPrimitive } from "radix-ui"
+import type { ContextMenu as ContextMenuTypes } from "radix-ui"
 
 import { cn } from "~/lib/utils"
 
@@ -62,7 +63,7 @@ ContextMenuContent.displayName = "ContextMenuContent"
 
 const ContextMenuSubTrigger = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.SubTrigger>,
-  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubTrigger> & {
+  ContextMenuTypes.ContextMenuSubTriggerProps & {
     inset?: boolean
   }
 >(({ className, inset, children, ...props }, ref) => (
@@ -97,7 +98,7 @@ ContextMenuSubContent.displayName = "ContextMenuSubContent"
 
 const ContextMenuItem = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & {
+  ContextMenuTypes.ContextMenuItemProps & {
     inset?: boolean
   }
 >(({ className, inset, ...props }, ref) => (
@@ -163,7 +164,7 @@ ContextMenuRadioItem.displayName = "ContextMenuRadioItem"
 
 const ContextMenuLabel = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.Label>,
-  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Label> & {
+  ContextMenuTypes.ContextMenuLabelProps & {
     inset?: boolean
   }
 >(({ className, inset, ...props }, ref) => (
