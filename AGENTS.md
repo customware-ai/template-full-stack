@@ -13,7 +13,7 @@ Jump to section:
 | Section                                               | Description                                                  |
 | ----------------------------------------------------- | ------------------------------------------------------------ |
 | [Core Principles](#-core-principles)                  | Type safety, architecture, error handling, testing, UX       |
-| [Commands](#commands)                                 | pnpm scripts for dev, build, test, lint, e2e; npm/npx only for Playwright                  |
+| [Commands](#commands)                                 | pnpm scripts for dev, build, test, lint, e2e                  |
 | [Architecture](#architecture)                         | Layered architecture, data flow, type safety                 |
 | [Development Requirements](#development-requirements) | Non-negotiable rules, code style, patterns                   |
 | [Directory Structure](#directory-structure)           | File organization and structure principles                   |
@@ -123,12 +123,12 @@ Testing order matters:
 pnpm test                           # Run all tests
 pnpm exec vitest run tests/unit/path/file.test.ts  # Run specific test file
 pnpm run check         # Run typecheck + lint
-npm run build && npx playwright test tests/e2e/path/spec.ts   # Use npm/npx only for Playwright verification because Playwright is installed globally via npm in the sandbox image
+pnpm run build && pnpm exec playwright test tests/e2e/path/spec.ts
 ```
 
 - Run the narrowest relevant check based on what changed
 - At the very end of the task, run `pnpm run check`; if it fails, fix the issues and rerun until it passes
-- After `pnpm run check` passes, run interactive Playwright verification for the changed flow with npm/npx because Playwright is installed globally via npm in the sandbox image; if it fails, fix the issues and rerun until it passes
+- After `pnpm run check` passes, run interactive Playwright verification for the changed flow; if it fails, fix the issues and rerun until it passes
 - After the interactive verification passes, create or modify and run only the targeted unit/component/integration test files for the changed behavior; if they fail, fix the issues and rerun until they pass
 - After the targeted unit/component/integration tests pass, create or modify and run only the targeted E2E spec(s) for the changed flow
 - This order is intentional: static analysis first to catch obvious mistakes cheaply, interactive verification next to confirm the real user flow, then targeted automated tests to lock that verified behavior in place
@@ -169,16 +169,17 @@ pnpm run typecheck     # TypeScript checking + React Router typegen
 pnpm run lint          # Type-aware linting with oxlint
 pnpm test              # Run all tests with Vitest
 pnpm run check         # Run typecheck + lint
-npm run build && npx playwright test tests/e2e/path/spec.ts # Use npm/npx only for Playwright verification because Playwright is installed globally via npm in the sandbox image
+pnpm run build && pnpm exec playwright test tests/e2e/path/spec.ts 
 ```
 
 To run a single test file:
 
 ```bash
 pnpm exec vitest run tests/unit/db/db.test.ts
+
+pnpm exec playwright test tests/e2e/path/spec.ts
 ```
 
-Use npm/npx only for Playwright verification because Playwright is installed globally via npm in the sandbox image. Keep all other app and package commands on pnpm.
 
 ### Dependency Baseline
 
@@ -319,10 +320,10 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
    - Use `pnpm run check` as the static-analysis gate so obvious type and lint errors are fixed before deeper verification
    - For any database schema or migration change, run `pnpm run db:generate` before completion and treat any unexpected follow-up migration file as a bug that must be fixed
    - For any database schema or migration change, the repository must end in a state where `pnpm run db:generate` reports no unexpected schema drift; if publish runs a generate step before migrate, a locally healthy `db:migrate` result alone is not sufficient
-   - After `pnpm run check` passes for code changes, run interactive Playwright verification for the changed flow with npm/npx because Playwright is installed globally via npm in the sandbox image, and fix/retry until it passes
+   - After `pnpm run check` passes for code changes, run interactive Playwright verification for the changed flow and fix/retry until it passes
    - Interactive Playwright is the user-perspective gate and should be treated as the source of truth for whether the changed flow behaves correctly in the UI
    - After interactive verification passes, create or modify and run only the targeted unit/component/integration test files for the changed behavior and fix/retry until they pass
-   - After the targeted unit/component/integration tests pass, run `npm run build && npx playwright test <spec>` for the targeted changed flow
+   - After the targeted unit/component/integration tests pass, run `pnpm run build && pnpm exec playwright test <spec>` for the targeted changed flow
    - The targeted automated tests come after interactive verification so they capture the behavior that was just confirmed from the user perspective
    - ALL checks must pass before considering task complete
    - Fix any errors before moving to next task
@@ -957,7 +958,7 @@ Re-read files anytime especially when the conversation is compacted:
 
 - Always call task_complete - never delete task files manually
 - Run checks only at the very end of each task: use the narrowest relevant check for scoped changes, and use `pnpm run check` only when multiple areas were updated
-- For code changes, after `pnpm run check` passes, run interactive Playwright verification for the changed flow, then create or modify and run the targeted unit/component/integration test files for the changed behavior, then run `npm run build && npx playwright test <spec>` for the targeted changed flow before marking a task complete
+- For code changes, after `pnpm run check` passes, run interactive Playwright verification for the changed flow, then create or modify and run the targeted unit/component/integration test files for the changed behavior, then run `pnpm run build && pnpm exec playwright test <spec>` for the targeted changed flow before marking a task complete
 - No need to run checks for docs-only/non-code-only updates (e.g. Markdown/docs, copy, comments, or other non-executable content)
 - If you feel the conversation is getting long, do NOT summarize and stop - keep executing task
 
