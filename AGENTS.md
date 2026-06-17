@@ -47,8 +47,9 @@ This codebase follows strict architectural patterns and coding standards:
 ### 1. **Type Safety First**
 
 - Every function must have explicit return types
-- No `any` types allowed - use `unknown` or proper types
-- Use Zod schemas for runtime validation, derive TypeScript types from schemas
+- No `any` types allowed - use `unknown` (if absolutely necessary) or proper types (almost always from zod schemas)
+- Never use `@ts-nocheck` or any file-level TypeScript disabling directive. If TypeScript reports errors, fix the root cause instead of silencing the compiler.
+- Use Zod schemas for runtime validation always, derive TypeScript types from schemas without duplicating types
 - Full type checking must pass before committing
 
 ### 2. **Clean Architecture**
@@ -79,6 +80,7 @@ This codebase follows strict architectural patterns and coding standards:
 - **Contract reuse**: derive TypeScript types from Zod schemas (`z.infer<>`), never duplicate shapes manually
 - **Boundary-first validation**: validate at tRPC/service entry, then only pass typed data deeper
 - **No `any`**: use exact types or `unknown` + refinement
+- **No `@ts-nocheck` ever**: do not disable TypeScript for a file. A task is not complete while any new or retained `@ts-nocheck` exists in touched code.
 
 ### 4. **Testing Requirements** 🚨 ENFORCED
 
@@ -303,7 +305,8 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
 
 1. **Strict Type Safety**
    - Every function must have explicit return types
-   - No `any` types - use `unknown` or specific types
+   - No `any` types and no `@ts-nocheck` - use specific types (usually derived from zod schemas) and fix root typing issues
+   - If TypeScript reports errors, fix the root cause. Never silence the compiler with file-level disables.
    - Enforce compile-time contracts with TypeScript (`strict` mode and explicit signatures)
    - Enforce runtime contracts with Zod at all trust boundaries (API input, DB row parsing, external payloads)
    - Derive TypeScript types from schemas using `z.infer<>`
