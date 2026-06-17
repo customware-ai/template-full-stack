@@ -440,6 +440,15 @@ export async function createUser(data: unknown): Promise<Result<User, Error>> {
 
 **Database Technology:** better-sqlite3 + Drizzle ORM with file persistence at `.dbs/database.db`
 
+**Fixed Database Paths:**
+
+- The actual app database path is always `.dbs/database.db`. This is the production/user-data database path.
+- The Playwright/E2E database path is always controlled by `E2E_DATABASE_FILE_PATH`, as wired in `tests/e2e/database.ts`.
+- Never change these paths, rename them, move them, introduce alternate defaults, or make migrations point somewhere else.
+- Drizzle migration scripts are set up to run against `.dbs/database.db` by default. That is intentional and must remain true.
+- E2E and interactive Playwright verification must use the E2E database path, not the production/user-data database.
+- Changing the production database path can break the app and can cause users to lose data. Treat these paths as hard contracts.
+
 **Critical Rules:**
 
 1. `server/db/index.ts` is the ONLY DB client initialization entrypoint
@@ -987,7 +996,7 @@ Overview is detailed at the bottom of this document. Make full use of the loggin
 
 ## React Router v7 Guide
 
-> **CRITICAL**: This section is the authoritative reference for **client-side routing only**. In this codebase, React Router is used for navigation, route hierarchy, and route module boundaries (not as a full-stack data framework).
+> **CRITICAL**: This section is the authoritative reference for **client-side routing only**. In this codebase, React Router is used only for navigation, route hierarchy, and route module boundaries on client-side (not as a full-stack data framework).
 
 ### Overview
 
