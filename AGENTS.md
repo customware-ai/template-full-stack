@@ -73,7 +73,9 @@ This codebase follows strict architectural patterns and coding standards:
 - Provide meaningful error messages
 - **See [Error Handling UX](#error-handling-ux-mandatory) for user-facing error patterns**
 
-### 3.1 **Contract Enforcement (Compile-Time + Runtime)**
+### 3.1 **Hard Contract Enforcement (Compile-Time + Runtime)**
+
+These rules repeat the type-safety principles as implementation gates. Treat them as hard constraints, not suggestions.
 
 - **Compile-time contracts**: all function return types must be explicit and type-safe
 - **Runtime contracts**: all external/untrusted input must be validated with Zod before use
@@ -118,15 +120,6 @@ Testing order matters:
 | Route + API flow     | Query/mutation loading, pending states, error handling, submission behavior  |
 | Bug fix              | Test that reproduces the bug + verifies the fix                              |
 | Refactor             | Ensure existing tests still pass (no new tests needed if behavior unchanged) |
-
-**Validation Commands:**
-
-```bash
-pnpm test                           # Run all tests
-pnpm exec vitest run tests/unit/path/file.test.ts  # Run specific test file
-pnpm run check         # Run typecheck + lint
-pnpm run build && pnpm exec playwright test tests/e2e/path/spec.ts
-```
 
 - Run the narrowest relevant check based on what changed
 - At the very end of the task, run `pnpm run check`; if it fails, fix the issues and rerun until it passes
@@ -285,7 +278,7 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
 
 ### Database Layer Rules
 
-**CRITICAL**: `server/db/` is the authoritative database boundary:
+**CRITICAL**: `server/db/` is the authoritative database boundary. The paths below are hard ownership boundaries and must not be bypassed:
 
 - `server/db/index.ts` initializes and exposes the shared Drizzle client
 - `server/db/schemas.ts` defines table schemas
@@ -307,10 +300,7 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
    - Every function must have explicit return types
    - No `any` types and no `@ts-nocheck` - use specific types (usually derived from zod schemas) and fix root typing issues
    - If TypeScript reports errors, fix the root cause. Never silence the compiler with file-level disables.
-   - Enforce compile-time contracts with TypeScript (`strict` mode and explicit signatures)
-   - Enforce runtime contracts with Zod at all trust boundaries (API input, DB row parsing, external payloads)
-   - Derive TypeScript types from schemas using `z.infer<>`
-   - Do not duplicate shape definitions across layers
+   - The compile-time and runtime contract rules above are non-negotiable: TypeScript strict mode, explicit signatures, Zod at trust boundaries, `z.infer<>`-derived types, and no duplicated shape definitions across layers
 
 2. **Test Coverage** 🚨 MANDATORY
    - See [Testing Requirements](#4-testing-requirements--enforced) in Core Principles - ALL rules apply
@@ -332,6 +322,7 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
    - Fix any errors before moving to next task
 
 4. **Single Source of Truth**
+   - These are hard architecture boundaries, not preferences
    - Database client initialization ONLY in `server/db/index.ts`
    - Table definitions ONLY in `server/db/schemas.ts`
    - Database read/write operations ONLY in `server/db/queries/`
@@ -350,7 +341,7 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
 
 ### Code Style Requirements
 
-- **Comments**: Always write detailed comments for all code. Use doc tag comments (JSDoc `/** */`) before functions, classes, and logic blocks. Use regular `//` comments inside logic to explain steps. Focus on the "why", not the "what"
+- **Comments**: Always write detailed comments for all code. Use doc tag comments (JSDoc `/** */`) before functions, classes, and logic blocks. Use regular `//` comments inside logic to explain why the code exists or why a non-obvious step is needed, not to restate what the code already says
 - **Naming**: Clear, descriptive names for functions and variables
 - **Functions**: Keep small and focused (single responsibility)
 - **Imports**: Use `~/` path alias for app imports
@@ -970,7 +961,6 @@ Re-read files anytime especially when the conversation is compacted:
 
 - Always call task_complete - never delete task files manually
 - Run checks only at the very end of each task: use the narrowest relevant check for scoped changes, and use `pnpm run check` only when multiple areas were updated
-- For code changes, after `pnpm run check` passes, run interactive Playwright verification for the changed flow, then create or modify and run the targeted unit/component/integration test files for the changed behavior, then run `pnpm run build && pnpm exec playwright test <spec>` for the targeted changed flow before marking a task complete
 - No need to run checks for docs-only/non-code-only updates (e.g. Markdown/docs, copy, comments, or other non-executable content)
 - If you feel the conversation is getting long, do NOT summarize and stop - keep executing task
 
