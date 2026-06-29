@@ -967,7 +967,7 @@ Re-read files anytime especially when the conversation is compacted:
 **Example task_complete usage:**
 
 ```bash
-node /workspace/mitb/task_complete.mjs --projectId "xyz" --taskId "123" --taskFilePath "/workspace/development/.agent/tasks/00_task-name.md" --status completed --summary "Implemented feature X with Y approach"
+node /workspace/builder/task_complete.mjs --projectId "xyz" --taskId "123" --taskFilePath "/workspace/development/.agent/tasks/00_task-name.md" --status completed --summary "Implemented feature X with Y approach"
 ```
 
 Use `--status failed` if the task cannot be completed, with a summary explaining why.
