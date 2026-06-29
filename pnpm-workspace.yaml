@@ -1,5 +1,9 @@
 minimumReleaseAge: 1440
 
+peerDependencyRules:
+  allowedVersions:
+    typescript: 7.0.1-rc
+
 allowBuilds:
   better-sqlite3: true
   core-js: false
