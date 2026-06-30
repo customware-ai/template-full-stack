@@ -9,6 +9,16 @@ import * as schema from "./schemas.js";
 
 export type DatabaseClient = BetterSQLite3Database<typeof schema>;
 
+function resolveMaybeRelativePath(filePath: string): string {
+  return path.isAbsolute(filePath)
+    ? filePath
+    : path.join(process.cwd(), filePath);
+}
+
+function isUnitTestRuntime(): boolean {
+  return process.env.NODE_ENV === "test" || process.env.VITEST === "true";
+}
+
 /**
  * Resolves the sqlite file path for the current runtime.
  * Playwright uses the e2e-specific override to point the backend process at an
@@ -17,9 +27,11 @@ export type DatabaseClient = BetterSQLite3Database<typeof schema>;
 function resolveDatabaseFilePath(): string {
   const configuredPath = process.env.E2E_DATABASE_FILE_PATH;
   if (configuredPath && configuredPath.trim().length > 0) {
-    return path.isAbsolute(configuredPath)
-      ? configuredPath
-      : path.join(process.cwd(), configuredPath);
+    return resolveMaybeRelativePath(configuredPath);
+  }
+
+  if (isUnitTestRuntime()) {
+    return path.join(process.cwd(), ".dbs", "e2e.db");
   }
 
   return path.join(process.cwd(), ".dbs", "database.db");

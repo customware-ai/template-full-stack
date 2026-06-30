@@ -1,6 +1,9 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
+import { E2E_DATABASE_FILE_PATH } from '../e2e/database';
+
+process.env.E2E_DATABASE_FILE_PATH = E2E_DATABASE_FILE_PATH;
 
 // Cleanup after each test
 afterEach(() => {

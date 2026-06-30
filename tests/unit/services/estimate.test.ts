@@ -1,41 +1,22 @@
-import path from "node:path";
-import { mkdtempSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
 import {
   getDatabase,
   resetDatabaseConnection,
 } from "../../../server/db/index.js";
-import { runMigrations } from "../../../server/db/migrate.js";
 import { estimates } from "../../../server/db/schemas.js";
 import {
   createEstimate,
   listEstimates,
 } from "../../../server/services/estimate.js";
-
-let testDatabaseDirectoryPath = "";
-
-/**
- * Creates an isolated sqlite file for the estimate service tests.
- */
-function configureEstimateTestDatabase(): void {
-  testDatabaseDirectoryPath = mkdtempSync(
-    path.join(tmpdir(), "estimate-service-test-"),
-  );
-  process.env.E2E_DATABASE_FILE_PATH = path.join(
-    testDatabaseDirectoryPath,
-    "estimate-service.db",
-  );
-  resetDatabaseConnection();
-}
+import { prepareE2EDatabase } from "../../e2e/database.js";
 
 /**
- * Ensures the template schema exists before service tests execute.
+ * Ensures service tests use the same E2E database contract as Playwright.
  */
 beforeAll(async () => {
-  configureEstimateTestDatabase();
-  await runMigrations();
+  resetDatabaseConnection();
+  await prepareE2EDatabase();
 });
 
 /**
@@ -51,11 +32,6 @@ beforeEach(async () => {
  */
 afterAll(() => {
   resetDatabaseConnection();
-  delete process.env.E2E_DATABASE_FILE_PATH;
-
-  if (testDatabaseDirectoryPath.length > 0) {
-    rmSync(testDatabaseDirectoryPath, { recursive: true, force: true });
-  }
 });
 
 describe("estimate service", () => {
