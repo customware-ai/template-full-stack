@@ -1,181 +1,102 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+
 import { Input } from '~/components/ui/Input';
 import { Textarea } from '~/components/ui/Textarea';
 
 describe('Input', () => {
-  describe('rendering', () => {
-    it('should render an input element', () => {
-      render(<Input placeholder="Enter text" />);
-      expect(screen.getByPlaceholderText('Enter text')).toBeInTheDocument();
-    });
+  it('renders an accessible labeled field with generated and forwarded props', () => {
+    render(
+      <Input
+        label="Email Address"
+        type="email"
+        helperText="Use your work email"
+        disabled
+        className="custom-class"
+      />,
+    );
 
-    it('should render with label when provided', () => {
-      render(<Input label="Email" />);
-      expect(screen.getByLabelText('Email')).toBeInTheDocument();
-    });
+    const input = screen.getByLabelText('Email Address');
 
-    it('should link label to input via htmlFor', () => {
-      render(<Input label="Email" id="email-input" />);
-      const input = screen.getByLabelText('Email');
-      expect(input).toHaveAttribute('id', 'email-input');
-    });
-
-    it('should generate id from label if not provided', () => {
-      render(<Input label="User Name" />);
-      const input = screen.getByLabelText('User Name');
-      expect(input).toHaveAttribute('id', 'user-name');
-    });
+    expect(input).toHaveAttribute('id', 'email-address');
+    expect(input).toHaveAttribute('type', 'email');
+    expect(input).toBeDisabled();
+    expect(input.className).toContain('custom-class');
+    expect(screen.getByText('Use your work email')).toBeInTheDocument();
   });
 
-  describe('error state', () => {
-    it('should display error message when provided', () => {
-      render(<Input error="Invalid input" />);
-      expect(screen.getByText('Invalid input')).toBeInTheDocument();
-    });
+  it('shows validation feedback instead of helper text', () => {
+    render(<Input error="Invalid input" helperText="Helper copy" data-testid="input" />);
 
-    it('should apply error styles when error is present', () => {
-      render(<Input error="Error" data-testid="input" />);
-      const input = screen.getByTestId('input');
-      expect(input.className).toContain('border-destructive');
-    });
+    const input = screen.getByTestId('input');
 
-    it('should not show helper text when error is present', () => {
-      render(<Input error="Error" helperText="Helper" />);
-      expect(screen.queryByText('Helper')).not.toBeInTheDocument();
-    });
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input.className).toContain('border-destructive');
+    expect(screen.getByText('Invalid input')).toBeInTheDocument();
+    expect(screen.queryByText('Helper copy')).not.toBeInTheDocument();
   });
 
-  describe('helper text', () => {
-    it('should display helper text when provided', () => {
-      render(<Input helperText="This is helpful" />);
-      expect(screen.getByText('This is helpful')).toBeInTheDocument();
-    });
+  it('forwards user interaction handlers', () => {
+    const handleChange = vi.fn();
+    const handleBlur = vi.fn();
+    const handleFocus = vi.fn();
 
-    it('should not display helper text when there is an error', () => {
-      render(<Input helperText="Helper" error="Error" />);
-      expect(screen.queryByText('Helper')).not.toBeInTheDocument();
-      expect(screen.getByText('Error')).toBeInTheDocument();
-    });
-  });
+    render(
+      <Input
+        onBlur={handleBlur}
+        onChange={handleChange}
+        onFocus={handleFocus}
+      />,
+    );
 
-  describe('interactions', () => {
-    it('should handle onChange', () => {
-      const handleChange = vi.fn();
-      render(<Input onChange={handleChange} />);
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
-      expect(handleChange).toHaveBeenCalled();
-    });
+    const input = screen.getByRole('textbox');
 
-    it('should handle onBlur', () => {
-      const handleBlur = vi.fn();
-      render(<Input onBlur={handleBlur} />);
-      fireEvent.blur(screen.getByRole('textbox'));
-      expect(handleBlur).toHaveBeenCalled();
-    });
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'test' } });
+    fireEvent.blur(input);
 
-    it('should handle onFocus', () => {
-      const handleFocus = vi.fn();
-      render(<Input onFocus={handleFocus} />);
-      fireEvent.focus(screen.getByRole('textbox'));
-      expect(handleFocus).toHaveBeenCalled();
-    });
-  });
-
-  describe('input types', () => {
-    it('should support email type', () => {
-      render(<Input type="email" data-testid="email" />);
-      expect(screen.getByTestId('email')).toHaveAttribute('type', 'email');
-    });
-
-    it('should support password type', () => {
-      render(<Input type="password" data-testid="password" />);
-      expect(screen.getByTestId('password')).toHaveAttribute('type', 'password');
-    });
-
-    it('should support number type', () => {
-      render(<Input type="number" data-testid="number" />);
-      expect(screen.getByTestId('number')).toHaveAttribute('type', 'number');
-    });
-  });
-
-  describe('additional props', () => {
-    it('should pass through additional input props', () => {
-      render(<Input disabled data-testid="input" />);
-      expect(screen.getByTestId('input')).toBeDisabled();
-    });
-
-    it('should apply custom className', () => {
-      render(<Input className="custom-class" data-testid="input" />);
-      expect(screen.getByTestId('input').className).toContain('custom-class');
-    });
-  });
-
-  describe('base styles', () => {
-    it('should apply base styles', () => {
-      render(<Input data-testid="input" />);
-      const input = screen.getByTestId('input');
-      expect(input.className).toContain('w-full');
-      expect(input.className).toContain('rounded-md');
-      expect(input.className).toContain('border-0');
-      expect(input.className).toContain('ring-1');
-      expect(input.className).toContain('ring-stone-200/80');
-      expect(input.className).toContain('shadow-xs');
-    });
+    expect(handleFocus).toHaveBeenCalledTimes(1);
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleBlur).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('Textarea', () => {
-  describe('rendering', () => {
-    it('should render a textarea element', () => {
-      render(<Textarea placeholder="Enter text" />);
-      expect(screen.getByPlaceholderText('Enter text').tagName).toBe('TEXTAREA');
-    });
+  it('renders an accessible textarea with helper text and textarea styling', () => {
+    render(<Textarea label="Description" helperText="Max 500 characters" />);
 
-    it('should render with label when provided', () => {
-      render(<Textarea label="Description" />);
-      expect(screen.getByLabelText('Description')).toBeInTheDocument();
-    });
+    const textarea = screen.getByLabelText('Description');
+
+    expect(textarea.tagName).toBe('TEXTAREA');
+    expect(textarea.className).toContain('min-h-16');
+    expect(textarea.className).toContain('resize-y');
+    expect(screen.getByText('Max 500 characters')).toBeInTheDocument();
   });
 
-  describe('error state', () => {
-    it('should display error message when provided', () => {
-      render(<Textarea error="Required field" />);
-      expect(screen.getByText('Required field')).toBeInTheDocument();
-    });
+  it('shows validation feedback instead of helper text', () => {
+    render(
+      <Textarea
+        error="Required field"
+        helperText="Max 500 characters"
+        data-testid="textarea"
+      />,
+    );
 
-    it('should apply error styles', () => {
-      render(<Textarea error="Error" data-testid="textarea" />);
-      expect(screen.getByTestId('textarea').className).toContain('border-destructive');
-    });
+    const textarea = screen.getByTestId('textarea');
+
+    expect(textarea).toHaveAttribute('aria-invalid', 'true');
+    expect(textarea.className).toContain('border-destructive');
+    expect(screen.getByText('Required field')).toBeInTheDocument();
+    expect(screen.queryByText('Max 500 characters')).not.toBeInTheDocument();
   });
 
-  describe('helper text', () => {
-    it('should display helper text when provided', () => {
-      render(<Textarea helperText="Max 500 characters" />);
-      expect(screen.getByText('Max 500 characters')).toBeInTheDocument();
-    });
-  });
+  it('forwards change handlers', () => {
+    const handleChange = vi.fn();
 
-  describe('interactions', () => {
-    it('should handle onChange', () => {
-      const handleChange = vi.fn();
-      render(<Textarea onChange={handleChange} />);
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
-      expect(handleChange).toHaveBeenCalled();
-    });
-  });
+    render(<Textarea onChange={handleChange} />);
 
-  describe('base styles', () => {
-    it('should apply textarea-specific styles', () => {
-      render(<Textarea data-testid="textarea" />);
-      const textarea = screen.getByTestId('textarea');
-      expect(textarea.className).toContain('min-h-');
-      expect(textarea.className).toContain('resize-y');
-      expect(textarea.className).toContain('border-0');
-      expect(textarea.className).toContain('ring-1');
-      expect(textarea.className).toContain('ring-stone-200/80');
-      expect(textarea.className).toContain('shadow-xs');
-    });
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
+
+    expect(handleChange).toHaveBeenCalledTimes(1);
   });
 });

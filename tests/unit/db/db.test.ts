@@ -43,55 +43,41 @@ describe("Database Operations", () => {
     testDb.close();
   });
 
-  it("creates and reads a record", () => {
-    const insert = testDb.prepare(
-      "INSERT INTO test_data (name, value) VALUES (?, ?)",
-    );
-    insert.run("Test Item", 42);
+  it("supports create, read, update, and delete operations", () => {
+    testDb
+      .prepare("INSERT INTO test_data (name, value) VALUES (?, ?)")
+      .run("Test Item", 42);
 
-    const row = testDb
+    const created = testDb
       .prepare("SELECT id, name, value FROM test_data WHERE name = ?")
       .get("Test Item") as { id: number; name: string; value: number };
 
-    expect(row.id).toBe(1);
-    expect(row.name).toBe("Test Item");
-    expect(row.value).toBe(42);
-  });
-
-  it("updates a record", () => {
-    testDb.prepare("INSERT INTO test_data (name, value) VALUES (?, ?)").run(
-      "Old",
-      10,
-    );
+    expect(created).toEqual({ id: 1, name: "Test Item", value: 42 });
 
     testDb
       .prepare("UPDATE test_data SET name = ?, value = ? WHERE id = ?")
-      .run("New", 20, 1);
+      .run("Updated Item", 84, created.id);
 
-    const row = testDb
+    const updated = testDb
       .prepare("SELECT name, value FROM test_data WHERE id = ?")
-      .get(1) as { name: string; value: number };
+      .get(created.id) as { name: string; value: number };
 
-    expect(row.name).toBe("New");
-    expect(row.value).toBe(20);
-  });
+    expect(updated).toEqual({ name: "Updated Item", value: 84 });
 
-  it("deletes a record", () => {
-    testDb.prepare("INSERT INTO test_data (name, value) VALUES (?, ?)").run(
-      "Delete Me",
-      10,
-    );
+    testDb.prepare("DELETE FROM test_data WHERE id = ?").run(created.id);
 
-    testDb.prepare("DELETE FROM test_data WHERE id = ?").run(1);
-
-    const row = testDb
+    const deleted = testDb
       .prepare("SELECT id FROM test_data WHERE id = ?")
-      .get(1) as { id: number } | undefined;
+      .get(created.id) as { id: number } | undefined;
 
-    expect(row).toBeUndefined();
+    expect(deleted).toBeUndefined();
   });
 
-  it("supports transaction rollback", () => {
+  it("enforces constraints and rolls back failed transactions", () => {
+    expect(() => {
+      testDb.prepare("INSERT INTO test_data (value) VALUES (?)").run(1);
+    }).toThrow();
+
     const transaction = testDb.transaction(() => {
       testDb
         .prepare("INSERT INTO test_data (name, value) VALUES (?, ?)")
@@ -106,12 +92,6 @@ describe("Database Operations", () => {
       .get() as { count: number };
 
     expect(count.count).toBe(0);
-  });
-
-  it("enforces NOT NULL constraints", () => {
-    expect(() => {
-      testDb.prepare("INSERT INTO test_data (value) VALUES (?)").run(1);
-    }).toThrow();
   });
 
   it("persists data to a file-backed sqlite database", () => {
@@ -130,8 +110,7 @@ describe("Database Operations", () => {
       .prepare("SELECT name, value FROM test_data WHERE name = ?")
       .get("Persisted") as { name: string; value: number };
 
-    expect(row.name).toBe("Persisted");
-    expect(row.value).toBe(7);
+    expect(row).toEqual({ name: "Persisted", value: 7 });
 
     reopenedDb.close();
     rmSync(tempDirectory, { recursive: true, force: true });
