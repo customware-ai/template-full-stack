@@ -14,3 +14,5 @@ logs/
 /.react-router/
 /build/
 /dist/
+
+.tasks/
