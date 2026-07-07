@@ -17,9 +17,27 @@
 			"version": "19.0"
 		}
 	},
+	"overrides": [
+		{
+			"files": [
+				"**/*.js",
+				"**/*.jsx",
+				"**/*.ts",
+				"**/*.tsx"
+			],
+			"rules": {
+				// Compulsory architecture rule: Do not remove or relax this rule; split files instead.
+				// JSON files are intentionally excluded because generated lock/config files can be long, keep project code files under 500 lines.
+				"eslint/max-lines": [
+					"error",
+					{
+						"max": 500
+					}
+				]
+			}
+		}
+	],
 	"rules": {
-		"no-unassigned-vars": "off",
-		"typescript/no-floating-promises": "off",
 		"typescript/explicit-function-return-type": "error",
 		"typescript/no-explicit-any": "error",
 		"typescript/no-inferrable-types": "off",
