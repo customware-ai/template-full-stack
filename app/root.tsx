@@ -14,8 +14,8 @@ import { AlertTriangle } from "lucide-react";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { attachGlobalFrontendErrorHandlers, logFrontendError } from "./utils/error-logger";
-import { Card, CardContent } from "./components/ui/Card";
-import { Button } from "./components/ui/Button";
+import { Card, CardContent } from "./components/ui/card";
+import { Button } from "./components/ui/button";
 import { ThemeProvider } from "./components/theme-provider";
 import { Toaster } from "./components/ui/toaster";
 

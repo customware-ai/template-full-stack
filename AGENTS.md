@@ -29,7 +29,7 @@ Jump to section:
 
 ```typescript
 // App-side imports
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui/button";
 import { trpc } from "~/lib/trpc";
 import { PageLayout } from "~/components/layout/PageLayout";
 
@@ -616,7 +616,7 @@ tests/
 
 #### Skeleton Components
 
-Use the existing `Skeleton` component from `~/components/ui/Skeleton`:
+Use the existing `Skeleton` component from `~/components/ui/skeleton`:
 
 | Component  | Use Case                      | Key Props             |
 | ---------- | ----------------------------- | --------------------- |
@@ -944,7 +944,7 @@ describe("User Service", () => {
 
 ### Path Alias
 
-Use `~/` to import from `app/` directory (e.g., `import { Button } from '~/components/ui/Button'`).
+Use `~/` to import from `app/` directory (e.g., `import { Button } from '~/components/ui/button'`).
 
 ## Autonomous Task Workflow
 
@@ -1154,8 +1154,8 @@ Use `trpc.*.useQuery()` for route-level reads:
 ```typescript
 import type { ReactElement } from "react";
 import { trpc } from "~/lib/trpc";
-import { Alert } from "~/components/ui/Alert";
-import { Skeleton } from "~/components/ui/Skeleton";
+import { Alert } from "~/components/ui/alert";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export default function CustomersPage(): ReactElement {
   const {
@@ -1192,8 +1192,8 @@ Use `trpc.*.useMutation()` for route-level writes:
 import type { FormEvent, ReactElement } from "react";
 import { useNavigate } from "react-router";
 import { trpc } from "~/lib/trpc";
-import { Button } from "~/components/ui/Button";
-import { Alert } from "~/components/ui/Alert";
+import { Button } from "~/components/ui/button";
+import { Alert } from "~/components/ui/alert";
 
 export default function NewCustomerPage(): ReactElement {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import * as React from "react";
 import { Slot } from "radix-ui";
 import { PanelLeftIcon } from "lucide-react";
 
-import { useSidebar, SidebarProvider } from "~/components/ui/SidebarProvider";
+import { useSidebar, SidebarProvider } from "~/components/ui/sidebar-provider";
 import {
   SidebarMenu,
   SidebarMenuAction,
@@ -15,18 +15,18 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "~/components/ui/SidebarMenu";
+} from "~/components/ui/sidebar-menu";
 import { cn } from "~/lib/utils";
-import { Button } from "~/components/ui/Button";
-import { Input } from "~/components/ui/Input";
-import { Separator } from "~/components/ui/Separator";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Separator } from "~/components/ui/separator";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "~/components/ui/Sheet";
+} from "~/components/ui/sheet";
 
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 

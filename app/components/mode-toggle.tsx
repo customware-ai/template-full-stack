@@ -4,7 +4,7 @@ import type { ReactElement } from "react";
 import { Laptop, Moon, Sun } from "lucide-react";
 
 import { useTheme } from "~/components/theme-provider";
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,

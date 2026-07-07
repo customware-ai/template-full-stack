@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { Input } from '~/components/ui/Input';
-import { Textarea } from '~/components/ui/Textarea';
+import { Input } from '~/components/ui/input';
+import { Textarea } from '~/components/ui/textarea';
 
 describe('Input', () => {
   it('renders an accessible labeled field with generated and forwarded props', () => {

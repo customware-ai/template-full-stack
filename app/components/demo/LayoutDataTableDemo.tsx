@@ -3,8 +3,8 @@
 import { type ReactElement, useState } from "react";
 import { type SortingState, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 import { columns, tableData } from "~/components/demo/shared";
-import { Button } from "~/components/ui/Button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/Table";
+import { Button } from "~/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 
 export function LayoutDataTableDemo(): ReactElement {
   const [sorting, setSorting] = useState<SortingState>([]);

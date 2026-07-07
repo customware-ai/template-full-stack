@@ -4,7 +4,7 @@ import * as React from "react"
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react"
 
 import { cn } from "~/lib/utils"
-import { buttonVariants } from "~/components/ui/Button"
+import { buttonVariants } from "~/components/ui/button"
 
 function Pagination({
   className,

@@ -3,10 +3,10 @@
 import { type Dispatch, type ReactElement, type SetStateAction } from "react";
 import { TablePropertiesIcon, WandSparklesIcon } from "lucide-react";
 
-import { Alert } from "~/components/ui/Alert";
+import { Alert } from "~/components/ui/alert";
 import { Calendar } from "~/components/ui/calendar";
 import { Kbd, KbdGroup } from "~/components/ui/kbd";
-import { Skeleton } from "~/components/ui/Skeleton";
+import { Skeleton } from "~/components/ui/skeleton";
 import { Spinner } from "~/components/ui/spinner";
 
 import { Section, ShowcaseCard } from "~/components/demo/shared";

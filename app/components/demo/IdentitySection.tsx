@@ -3,11 +3,11 @@
 import { type ReactElement } from "react";
 import { SparklesIcon } from "lucide-react";
 import { toast as sonnerToast } from "sonner";
-import { Button } from "~/components/ui/Button";
-import { Separator } from "~/components/ui/Separator";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/Badge";
+import { Badge } from "~/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,7 +15,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "~/components/ui/Breadcrumb";
+} from "~/components/ui/breadcrumb";
 import {
   Empty,
   EmptyContent,

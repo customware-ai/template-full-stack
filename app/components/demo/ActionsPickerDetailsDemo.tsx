@@ -3,12 +3,12 @@
 import { type Dispatch, type ReactElement, type SetStateAction } from "react";
 import { CreditCardIcon } from "lucide-react";
 import { ShowcaseCard } from "~/components/demo/shared";
-import { Badge } from "~/components/ui/Badge";
-import { Button } from "~/components/ui/Button";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import { Combobox } from "~/components/ui/combobox";
 import { DatePicker } from "~/components/ui/date-picker";
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldSeparator, FieldSet, FieldTitle } from "~/components/ui/field";
-import { Input } from "~/components/ui/Input";
+import { Input } from "~/components/ui/input";
 import { InputGroup, InputGroupTextarea } from "~/components/ui/input-group";
 import {
   Item,
@@ -20,8 +20,8 @@ import {
   ItemMedia,
   ItemTitle,
 } from "~/components/ui/item";
-import { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitle, PopoverTrigger } from "~/components/ui/Popover";
-import { Select } from "~/components/ui/Select";
+import { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitle, PopoverTrigger } from "~/components/ui/popover";
+import { Select } from "~/components/ui/select";
 
 export function ActionsPickerDetailsDemo({
   dateValue,

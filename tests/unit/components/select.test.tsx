@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Select } from '~/components/ui/Select';
+import { Select } from '~/components/ui/select';
 
 describe('Select', () => {
   it('renders the trigger as a surfaced field in light mode', () => {

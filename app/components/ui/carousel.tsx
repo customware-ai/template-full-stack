@@ -6,7 +6,7 @@ import { type EmblaCarouselType, type EmblaOptionsType } from "embla-carousel"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 
 import { cn } from "~/lib/utils"
-import { Button } from "~/components/ui/Button"
+import { Button } from "~/components/ui/button"
 
 type CarouselContextValue = {
   carouselRef: ReturnType<typeof useEmblaCarousel>[0]

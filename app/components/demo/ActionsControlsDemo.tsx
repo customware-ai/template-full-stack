@@ -3,10 +3,10 @@
 import { type Dispatch, type ReactElement, type SetStateAction } from "react";
 import { SearchIcon, SparklesIcon } from "lucide-react";
 import { ShowcaseCard } from "~/components/demo/shared";
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui/button";
 import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "~/components/ui/button-group";
 import { Checkbox } from "~/components/ui/checkbox";
-import { Input } from "~/components/ui/Input";
+import { Input } from "~/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
@@ -20,13 +20,13 @@ import {
   InputOTPSlot,
 } from "~/components/ui/input-otp";
 import { Kbd } from "~/components/ui/kbd";
-import { Label } from "~/components/ui/Label";
+import { Label } from "~/components/ui/label";
 import { NativeSelect } from "~/components/ui/native-select";
 import { Progress } from "~/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Slider } from "~/components/ui/slider";
 import { Switch } from "~/components/ui/switch";
-import { Textarea } from "~/components/ui/Textarea";
+import { Textarea } from "~/components/ui/textarea";
 import { Toggle } from "~/components/ui/toggle";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 

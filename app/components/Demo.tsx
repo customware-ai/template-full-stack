@@ -3,7 +3,7 @@
 import { lazy, Suspense, type ReactElement, useState } from "react";
 import { toast as sonnerToast } from "sonner";
 
-import { TooltipProvider } from "~/components/ui/Tooltip";
+import { TooltipProvider } from "~/components/ui/tooltip";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "~/components/ui/command";
 import { ToastAction } from "~/components/ui/toast";
 import { toast as legacyToast } from "~/hooks/use-toast";

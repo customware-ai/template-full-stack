@@ -3,12 +3,12 @@
 import { type ReactElement } from "react";
 import { BellIcon, Layers3Icon, Settings2Icon } from "lucide-react";
 import { ShowcaseCard } from "~/components/demo/shared";
-import { Badge } from "~/components/ui/Badge";
-import { Button } from "~/components/ui/Button";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import { Kbd } from "~/components/ui/kbd";
 import { DirectionProvider, useDirection } from "~/components/ui/direction";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider, SidebarSeparator } from "~/components/ui/Sidebar";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "~/components/ui/SidebarMenu";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider, SidebarSeparator } from "~/components/ui/sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "~/components/ui/sidebar-menu";
 
 function SidebarPreview(): ReactElement {
   const items = [

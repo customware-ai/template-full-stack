@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast as sonnerToast } from "sonner";
 import { z } from "zod";
 import { ShowcaseCard } from "~/components/demo/shared";
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,9 +16,9 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { Input } from "~/components/ui/Input";
+import { Input } from "~/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { Textarea } from "~/components/ui/Textarea";
+import { Textarea } from "~/components/ui/textarea";
 
 const formSchema = z.object({
   company: z.string().min(2, "Use at least 2 characters."),

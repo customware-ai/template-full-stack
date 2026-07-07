@@ -2,7 +2,7 @@
 
 import { type ReactElement } from "react";
 import { ShowcaseCard } from "~/components/demo/shared";
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/components/ui/accordion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";

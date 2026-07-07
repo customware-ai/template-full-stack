@@ -3,7 +3,7 @@
 import { type ReactElement } from "react";
 import { CommandIcon } from "lucide-react";
 
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,8 +28,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "~/components/ui/Sheet";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/Tooltip";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "~/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import {
   ContextMenu,
   ContextMenuContent,

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { Button } from '~/components/ui/Button';
+import { Button } from '~/components/ui/button';
 
 describe('Button', () => {
   it('renders children with the default button styling', () => {

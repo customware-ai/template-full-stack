@@ -2,8 +2,8 @@
 
 import { lazy, Suspense, type ReactElement } from "react";
 import { ShowcaseCard } from "~/components/demo/shared";
-import { Badge } from "~/components/ui/Badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/Table";
+import { Badge } from "~/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 
 // TanStack Table is a large third-party package. Keep it behind this import()
 // boundary so simple table UI does not pull data-grid code into the parent chunk.
