@@ -38,7 +38,9 @@
 		}
 	],
 	"rules": {
+		"no-unassigned-vars": "error",
 		"typescript/explicit-function-return-type": "error",
+		"typescript/no-floating-promises": "error",
 		"typescript/no-explicit-any": "error",
 		"typescript/no-inferrable-types": "off",
 		"react/jsx-key": "error",
