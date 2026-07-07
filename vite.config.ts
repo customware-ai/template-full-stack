@@ -16,6 +16,9 @@ const reactCompilerBabelOptions = {
 } as Parameters<typeof babel>[0];
 
 export default defineConfig({
+  build: {
+    chunkSizeWarningLimit: 200,
+  },
   plugins: [
     tailwindcss(),
     reactRouter(),

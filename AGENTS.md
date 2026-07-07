@@ -317,6 +317,7 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
    - Interactive Playwright is the user-perspective gate and should be treated as the source of truth for whether the changed flow behaves correctly in the UI
    - After interactive verification passes, create or modify and run only the targeted unit/component/integration test files for the changed behavior and fix/retry until they pass
    - After the targeted unit/component/integration tests pass, run `pnpm run build && pnpm exec playwright test <spec>` for the targeted changed flow
+   - If the production build reports chunks over the configured warning limit, inspect whether the warning comes from a large route, component file, or external package that should be behind `import()`/`React.lazy` before accepting the warning
    - The targeted automated tests come after interactive verification so they capture the behavior that was just confirmed from the user perspective
    - ALL checks must pass before considering task complete
    - Fix any errors before moving to next task
@@ -345,6 +346,7 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
 - **Naming**: Clear, descriptive names for functions and variables
 - **Functions**: Keep small and focused (single responsibility)
 - **Imports**: Use `~/` path alias for app imports
+- **Large frontend imports**: Any route, component file, or external package that is likely to add about 50 kB or more to a client chunk must be loaded behind `import()`/`React.lazy` unless it is required for the first paint. Examples include charting packages (`recharts`), data-grid/table engines (`@tanstack/react-table`), rich editors, maps, PDF viewers, analytics dashboards, and large demo/reference surfaces. Add a short comment at the lazy boundary explaining that the import must stay lazy because the dependency is large.
 - **Formatting**: Let Prettier handle formatting (configured in project)
 
 ### Key Patterns

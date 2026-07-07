@@ -2,7 +2,6 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
-import { z } from "zod";
 import { type ChartConfig } from "~/components/ui/chart";
 import { cn } from "~/lib/utils";
 
@@ -38,15 +37,6 @@ export const columns: ColumnDef<DealRow>[] = [
   { accessorKey: "stage", header: "Stage" },
   { accessorKey: "value", header: "Value" },
 ];
-
-export const formSchema = z.object({
-  company: z.string().min(2, "Use at least 2 characters."),
-  contact: z.string().email("Enter a valid email."),
-  notes: z.string().min(10, "Add more context."),
-  priority: z.enum(["standard", "expedite"]),
-});
-
-export type FormValues = z.infer<typeof formSchema>;
 
 export function Section({
   title,
