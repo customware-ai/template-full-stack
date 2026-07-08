@@ -86,48 +86,48 @@ These rules repeat the type-safety principles as implementation gates. Treat the
 
 ### 4. **Testing Requirements** 🚨 ENFORCED
 
-> **CRITICAL**: All code changes MUST include corresponding tests. A task is NOT complete if tests are missing.
+> **CRITICAL**: Tests are required only when they protect core behavior, a complex flow, a stable contract, or a bug fix that must not regress. Do not add tests for every small change.
 
 Testing order matters:
 - `pnpm run check` is the static-analysis gate. Run it near the end to catch obvious type and lint errors before deeper verification.
 - Interactive Playwright verification is the user-perspective gate. Use it to confirm the changed flow actually works in the UI the way a user would experience it.
-- Targeted unit/component/integration tests and targeted E2E tests are the regression gates. Write or update them after the behavior is confirmed so future changes do not break the expected flow.
+- Targeted unit/component/integration tests and targeted E2E tests are regression gates only when the changed behavior warrants automated coverage. Prefer updating existing tests before adding new ones.
 
-**Mandatory Test Coverage:**
+**Minimal Test Coverage Decision:**
 
-- **Frontend changes** (routes, components, hooks, UI behavior) → MUST create or modify the related component/unit tests and run those specific test files
-- **Backend changes** (server services, contracts, db queries/operations, tRPC procedures) → MUST create or modify the related unit/integration tests and run those specific test files
-- **All code changes** → MUST run interactive Playwright verification for the changed flow before creating or modifying unit tests or Playwright e2e tests
-- **All code changes** → MUST create or modify Playwright e2e tests for the changed flow
-- **Bug fixes** → MUST have a test that reproduces the bug and verifies the fix
-- **New features** → MUST have tests covering happy paths AND error cases
+- **Frontend changes** (routes, components, hooks, UI behavior) → use interactive Playwright verification for changed user-facing behavior. Add or update unit/component tests only for stable core components, shared behavior, complex state, accessibility contracts, or regressions that need strict protection.
+- **Backend changes** (server services, contracts, db queries/operations, tRPC procedures) → add or update unit/integration tests when the change affects core business logic, runtime contracts, persistence behavior, permissions, calculations, or a bug fix.
+- **Small UI changes** (copy, color, spacing, one-off layout tweaks, simple button wiring) → normally need no unit or E2E test. Use interactive verification when the UI behavior or layout changed.
+- **E2E tests** → add or update only for core user workflows, complex multi-step flows, persistence/navigation boundaries, permission boundaries, or high-risk regressions.
+- **Bug fixes** → write or update a test only when the bug is in core behavior or is likely to regress. Otherwise prove the fix with the narrowest relevant check and interactive verification when user-facing.
+- **Existing tests** → inspect connected tests first. Remove obsolete, brittle, convoluted, or non-core tests; update connected tests when they can carry the needed coverage; add new tests only when no existing test can.
 
 **Enforcement Rules:**
 
-1. **NO CODE WITHOUT TESTS**: If you modify or add code, you MUST add/update tests. No exceptions.
-2. **Tests before completion**: Never mark a task as complete without corresponding test coverage
+1. **NO UNNECESSARY TESTS**: Do not add tests unless they protect core behavior, complex flows, stable contracts, or meaningful regressions.
+2. **Existing tests first**: Remove, update, or preserve connected existing tests before adding new tests.
 3. **Test the behavior, not the implementation**: Tests should verify what the code does, not how it does it
-4. **Interactive verification first**: Run interactive Playwright verification for the changed flow before creating or modifying unit tests or Playwright e2e tests
-5. **Targeted unit tests before e2e**: After interactive verification passes, create or modify and run only the unit/component/integration test files relevant to the changed behavior
-6. **Run tests before finishing**: Always run the relevant targeted tests needed to verify the changed behavior before completing the task
+4. **Interactive verification for UI**: Run interactive Playwright verification for changed user-facing flows before deciding whether unit or E2E coverage is warranted.
+5. **Targeted commands only**: Run only the unit/component/integration or E2E files relevant to the warranted coverage.
+6. **No confidence reruns**: Rerun tests only when code, tests, config, fixtures, or prior output changed, or when a narrower diagnostic is needed.
 
 **What to test:**
 
-| Change Type          | Required Tests                                                               |
-| -------------------- | ---------------------------------------------------------------------------- |
-| New component        | Rendering, variants, props, interactions, accessibility                      |
-| New service function | Happy path, error cases, edge cases, validation                              |
-| Route + API flow     | Query/mutation loading, pending states, error handling, submission behavior  |
-| Bug fix              | Test that reproduces the bug + verifies the fix                              |
-| Refactor             | Ensure existing tests still pass (no new tests needed if behavior unchanged) |
+| Change Type          | Test decision                                                                 |
+| -------------------- | ----------------------------------------------------------------------------- |
+| New component        | Test only stable shared behavior, accessibility contracts, or complex state   |
+| New service function | Test core business logic, contract validation, persistence, and error paths   |
+| Route + API flow     | Prefer interactive verification; add E2E only for core or complex workflows   |
+| Bug fix              | Add/update a test when the bug is core or likely to regress                   |
+| Refactor             | Run connected existing tests only when behavior or contracts could change     |
 
 - Run the narrowest relevant check based on what changed
-- At the very end of the task, run `pnpm run check`; if it fails, fix the issues and rerun until it passes
-- After `pnpm run check` passes, run interactive Playwright verification for the changed flow; if it fails, fix the issues and rerun until it passes
-- After the interactive verification passes, create or modify and run only the targeted unit/component/integration test files for the changed behavior; if they fail, fix the issues and rerun until they pass
-- After the targeted unit/component/integration tests pass, create or modify and run only the targeted E2E spec(s) for the changed flow
-- This order is intentional: static analysis first to catch obvious mistakes cheaply, interactive verification next to confirm the real user flow, then targeted automated tests to lock that verified behavior in place
-- Run `pnpm run check` at the very end only when multiple areas are updated
+- Run `pnpm run check` near the end; if it fails, fix every visible issue group before rerunning the broad command
+- Run interactive Playwright verification for changed user-facing behavior; if it fails, fix the issue and rerun the same targeted verification
+- If unit/component/integration coverage is warranted, run only the targeted files for the changed behavior
+- If E2E coverage is warranted, run only the new, changed, or directly connected E2E spec(s)
+- This order is intentional: static analysis first, interactive verification next for real user behavior, then minimal automated tests only when they protect core behavior
+- Run broad checks once after targeted fixes are complete; do not rerun broad commands after each tiny fix while known issue groups remain
 - If higher-priority task instructions define a stricter or different validation workflow, follow those instructions
 - No need to run checks for docs-only/non-code changes
 
@@ -302,9 +302,9 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
    - If TypeScript reports errors, fix the root cause. Never silence the compiler with file-level disables.
    - The compile-time and runtime contract rules above are non-negotiable: TypeScript strict mode, explicit signatures, Zod at trust boundaries, `z.infer<>`-derived types, and no duplicated shape definitions across layers
 
-2. **Test Coverage** 🚨 MANDATORY
+2. **Test Coverage** 🚨 MANDATORY WHEN WARRANTED
    - See [Testing Requirements](#4-testing-requirements--enforced) in Core Principles - ALL rules apply
-   - **A task is NOT COMPLETE without corresponding tests**
+   - A task is not complete until the required test decision is recorded and any warranted targeted tests pass
 
 3. **Validation Before Completion**
    - Run checks only at the very end of the task (right before marking it complete). Use focused validation based on the scope of changes (e.g. `pnpm run typecheck` when only TypeScript/types are modified, `pnpm test` when tests are updated, `pnpm run lint` for lint-focused refactors). Skip checks for non-code-only changes (e.g. Markdown/docs, copy, comments, or other non-executable content).
@@ -313,12 +313,12 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
    - Use `pnpm run check` as the static-analysis gate so obvious type and lint errors are fixed before deeper verification
    - For any database schema or migration change, run `pnpm run db:generate` before completion and treat any unexpected follow-up migration file as a bug that must be fixed
    - For any database schema or migration change, the repository must end in a state where `pnpm run db:generate` reports no unexpected schema drift; if publish runs a generate step before migrate, a locally healthy `db:migrate` result alone is not sufficient
-   - After `pnpm run check` passes for code changes, run interactive Playwright verification for the changed flow and fix/retry until it passes
+   - After `pnpm run check` passes for user-facing code changes, run interactive Playwright verification for the changed flow and fix/retry until it passes
    - Interactive Playwright is the user-perspective gate and should be treated as the source of truth for whether the changed flow behaves correctly in the UI
-   - After interactive verification passes, create or modify and run only the targeted unit/component/integration test files for the changed behavior and fix/retry until they pass
-   - After the targeted unit/component/integration tests pass, run `pnpm run build && pnpm exec playwright test <spec>` for the targeted changed flow
+   - After interactive verification passes, create, modify, remove, or skip targeted unit/component/integration tests according to the minimal coverage decision
+   - If E2E is warranted, run `pnpm run build && pnpm exec playwright test <spec>` for only the targeted changed flow
    - If the production build reports chunks over the configured warning limit, inspect whether the warning comes from a large route, component file, or external package that should be behind `import()`/`React.lazy` before accepting the warning
-   - The targeted automated tests come after interactive verification so they capture the behavior that was just confirmed from the user perspective
+   - Warranted targeted automated tests come after interactive verification so they capture the behavior that was just confirmed from the user perspective
    - ALL checks must pass before considering task complete
    - Fix any errors before moving to next task
 
@@ -437,9 +437,11 @@ export async function createUser(data: unknown): Promise<Result<User, Error>> {
 
 - The actual app database path is always `.dbs/database.db`. This is the production/user-data database path.
 - The Playwright/E2E database path is always controlled by `E2E_DATABASE_FILE_PATH`, as wired in `tests/e2e/database.ts`.
+- Unit, integration, interactive Playwright, and E2E verification must never read from, write to, migrate, seed, reset, truncate, or inspect `.dbs/database.db`.
+- Test and verification code must use `.dbs/e2e.db` through `E2E_DATABASE_FILE_PATH`, the unit-test fallback in `server/db/index.ts`, or a clearly isolated temporary sqlite file created only for that test.
+- `.dbs/database.db` is only for actual app runtime data and intentional app database migration commands such as `pnpm run db:migrate`. It is not a verification sandbox.
 - Never change these paths, rename them, move them, introduce alternate defaults, or make migrations point somewhere else.
 - Drizzle migration scripts are set up to run against `.dbs/database.db` by default. That is intentional and must remain true.
-- E2E and interactive Playwright verification must use the E2E database path, not the production/user-data database.
 - Changing the production database path can break the app and can cause users to lose data. Treat these paths as hard contracts.
 
 **Critical Rules:**
@@ -448,6 +450,7 @@ export async function createUser(data: unknown): Promise<Result<User, Error>> {
 2. `server/db/queries/*.ts` is the ONLY place for database read/write logic
 3. Use Drizzle migrations for all schema changes
 4. Never modify the database schema directly in production
+5. Never point tests, Playwright, fixture setup, or verification helpers at `.dbs/database.db`
 
 **Migration System:**
 
@@ -467,9 +470,9 @@ When creating a new migration:
 2. **Review** generated SQL in `server/db/migrations/`
 3. **Run** migrations: `pnpm run db:migrate`
 4. **Verify** and test
-   - Check `.dbs/database.db` was updated
+   - Check `.dbs/database.db` was updated only for the intentional app database migration command
    - Verify tables/columns were created correctly
-   - Write/update tests for any new database operations
+   - Run any warranted tests against `.dbs/e2e.db` or an isolated temporary sqlite database, never against `.dbs/database.db`
 
 **Drizzle Metadata Integrity:**
 
@@ -895,7 +898,7 @@ oxlint enforces strict standards:
 
 ### Testing Patterns
 
-> **CRITICAL**: See [Testing Requirements](#4-testing-requirements--enforced) for mandatory rules. ALL code changes require tests.
+> **CRITICAL**: See [Testing Requirements](#4-testing-requirements--enforced). Add, update, remove, or skip tests according to the minimal coverage decision.
 
 **Tools:** Vitest + React Testing Library + Playwright
 
@@ -903,16 +906,14 @@ oxlint enforces strict standards:
 
 ```typescript
 describe("Button", () => {
-  it("renders children", () => {
-    render(<Button>Click me</Button>);
-    expect(screen.getByText("Click me")).toBeInTheDocument();
-  });
-
-  it("handles click", async () => {
+  it("shows loading feedback and disables interaction while loading", async () => {
     const handleClick = vi.fn();
-    render(<Button onClick={handleClick}>Click me</Button>);
-    await userEvent.click(screen.getByText("Click me"));
-    expect(handleClick).toHaveBeenCalledTimes(1);
+    render(<Button loading onClick={handleClick}>Saving</Button>);
+
+    await userEvent.click(screen.getByRole("button", { name: "Saving" }));
+
+    expect(screen.getByRole("button", { name: "Saving" })).toBeDisabled();
+    expect(handleClick).not.toHaveBeenCalled();
   });
 });
 ```
@@ -940,7 +941,7 @@ describe("User Service", () => {
 });
 ```
 
-**Organization:** Unit tests in `tests/unit/` mirroring active boundaries (`app/components`, `server/db`, `server/services`) and browser e2e tests in `tests/e2e/`. Test happy paths AND error cases.
+**Organization:** Unit tests in `tests/unit/` mirror active boundaries only when coverage is warranted (`app/components`, `server/db`, `server/services`). Browser E2E tests live in `tests/e2e/` only for core or complex workflows. Keep sample tests minimal; do not test every prop, class, variant, button click, or incidental UI branch.
 
 ### Path Alias
 

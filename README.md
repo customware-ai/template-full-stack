@@ -211,7 +211,7 @@ pnpm run check
 - Database tests
 - Service-layer tests
 
-Unit tests use Vitest; Playwright e2e is run through the project scripts where applicable.
+Unit tests use Vitest for core behavior, stable contracts, and meaningful regressions. Playwright e2e is reserved for core or complex user workflows. The included tests are samples of minimal warranted coverage, not a requirement to test every component prop, style, or UI tweak.
 
 ## 🏗️ Example Module
 

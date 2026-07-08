@@ -4,9 +4,10 @@ import { expect, test } from "@playwright/test";
 import { getE2EDatabaseFilePath } from "./database";
 
 /**
- * Demonstrates how future e2e tests can seed deterministic backend state by
- * writing directly to the dedicated Playwright sqlite database before the page
- * loads. This helper is intentionally simple because this file is only a demo.
+ * Demonstrates how future warranted e2e tests can seed deterministic backend
+ * state by writing directly to the dedicated Playwright sqlite database before
+ * the page loads. This helper is intentionally simple because this file is only
+ * a skipped demo, not a requirement to add e2e coverage for every change.
  *
  * REMOVE THIS FILE WHEN THE FIRST ACTUAL E2E TEST IS ADDED.
  */
@@ -41,7 +42,7 @@ test.describe("demo e2e format", () => {
     // THIS IS ONLY A DEMO FILE FOR E2E TEST FORMAT.
     // THIS IS NOT A REAL PRODUCT TEST.
     // REMOVE THIS FILE WHEN THE FIRST ACTUAL E2E TEST IS ADDED.
-    // REPLACE THIS SKIPPED EXAMPLE WITH REAL ASSERTIONS FOR A SHIPPED FEATURE.
+    // REPLACE IT ONLY WHEN A CORE OR COMPLEX USER FLOW WARRANTS E2E COVERAGE.
 
     seedImaginaryFeatureState();
 
