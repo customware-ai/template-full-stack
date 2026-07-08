@@ -10,6 +10,8 @@ logs/
 
 # Local sqlite database files
 .dbs/
+/database.db
+
 
 # React Router
 /.react-router/
