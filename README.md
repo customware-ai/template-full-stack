@@ -61,7 +61,7 @@ The point is to preserve proven structure and standards while replacing domain l
 - **Type Safety**: Zod contracts + neverthrow `Result` patterns
 - **Data Layer**: SQLite (`better-sqlite3`) with Drizzle migrations
 - **Component System**: Tailwind v4 + reusable UI primitives
-- **Quality Gates**: typecheck, lint, and Vitest test baseline
+- **Quality Gates**: static validation, lint, and Vitest test baseline
 - **Template Scope**: workflow shell scaffold, not a finished product workflow implementation
 
 ## Workflow Shell
@@ -200,10 +200,9 @@ This keeps one reference domain table for easy adaptation.
 | `pnpm run start:e2e`  | Start built server against `.dbs/e2e.db` |
 | `pnpm run db:generate`| Generate Drizzle SQL migrations       |
 | `pnpm run db:migrate` | Run migrations                        |
-| `pnpm run typecheck`  | Run TypeScript checks                 |
-| `pnpm run lint`       | Type-aware linting with oxlint         |
+| `pnpm run lint`       | Type-aware linting with TypeScript diagnostics |
 | `pnpm test`           | Run Vitest suite                      |
-| `pnpm run check`      | Run `typecheck` and `lint`            |
+| `pnpm run check`      | Run React Router typegen and `lint`   |
 | `pnpm run prepare:e2e` | Rebuild `.dbs/e2e.db` with migrations and deterministic seed data |
 | `pnpm run e2e`        | Build and run Playwright E2E specs    |
 
