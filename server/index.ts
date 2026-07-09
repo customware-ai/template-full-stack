@@ -32,6 +32,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CLIENT_DIR = path.resolve(__dirname, "../client");
 const SHORT_STATIC_CACHE = "max-age=120";
 const IMMUTABLE_ASSET_CACHE = "public, max-age=31536000, immutable";
+const INDEX_HTML_CONTENT_TYPE = "text/html; charset=UTF-8";
+
+function acceptsBrotli(acceptEncoding: string | undefined): boolean {
+  return acceptEncoding?.split(",").some((encoding) => encoding.trim() === "br") ?? false;
+}
 
 function getStaticCacheControl(filePath: string): string {
   const normalizedPath = filePath.split(path.sep).join("/");
@@ -113,11 +118,14 @@ app.post("/logs", async (c) => {
 /**
  * Serve built client files from the client directory.
  * This includes Vite assets, public files, images, fonts, favicon, etc.
+ * Keep cache headers and precompressed asset support here: production apps
+ * need hashed assets to be cacheable while HTML stays quickly refreshable.
  */
 app.use(
   "/*",
   serveStatic({
     root: CLIENT_DIR,
+    precompressed: true,
     onFound(filePath, c) {
       c.header("Cache-Control", getStaticCacheControl(filePath));
     },
@@ -204,8 +212,17 @@ app.get("*", (c) => {
     return c.text("Application not built. Run 'npm run build' first.", 500);
   }
 
-  const html = fs.readFileSync(indexPath, "utf-8");
   c.header("Cache-Control", SHORT_STATIC_CACHE);
+  const brotliIndexPath = `${indexPath}.br`;
+  if (acceptsBrotli(c.req.header("Accept-Encoding")) && fs.existsSync(brotliIndexPath)) {
+    const compressedHtml = fs.readFileSync(brotliIndexPath);
+    c.header("Content-Type", INDEX_HTML_CONTENT_TYPE);
+    c.header("Content-Encoding", "br");
+    c.header("Vary", "Accept-Encoding", { append: true });
+    return c.body(compressedHtml);
+  }
+
+  const html = fs.readFileSync(indexPath, "utf-8");
   return c.html(html);
 });
 

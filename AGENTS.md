@@ -168,6 +168,8 @@ pnpm run prepare:e2e   # Rebuild .dbs/e2e.db with migrations and deterministic s
 pnpm run e2e           # Build and run Playwright E2E with Playwright-owned lifecycle
 ```
 
+The production server intentionally serves built client assets with cache headers and precompressed asset support; keep hashed assets long-cacheable, keep HTML short-cacheable, and do not remove this static-serving behavior.
+
 To run a single test file:
 
 ```bash
