@@ -30,6 +30,18 @@ import {
 // Resolve paths relative to the script location (works in both dev and production)
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CLIENT_DIR = path.resolve(__dirname, "../client");
+const SHORT_STATIC_CACHE = "max-age=120";
+const IMMUTABLE_ASSET_CACHE = "public, max-age=31536000, immutable";
+
+function getStaticCacheControl(filePath: string): string {
+  const normalizedPath = filePath.split(path.sep).join("/");
+
+  if (normalizedPath.includes("/assets/")) {
+    return IMMUTABLE_ASSET_CACHE;
+  }
+
+  return SHORT_STATIC_CACHE;
+}
 
 const app = new Hono();
 /**
@@ -106,6 +118,9 @@ app.use(
   "/*",
   serveStatic({
     root: CLIENT_DIR,
+    onFound(filePath, c) {
+      c.header("Cache-Control", getStaticCacheControl(filePath));
+    },
   }),
 );
 
@@ -190,6 +205,7 @@ app.get("*", (c) => {
   }
 
   const html = fs.readFileSync(indexPath, "utf-8");
+  c.header("Cache-Control", SHORT_STATIC_CACHE);
   return c.html(html);
 });
 
