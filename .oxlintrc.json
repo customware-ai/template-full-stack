@@ -8,6 +8,12 @@
 		"jsx-a11y",
 		"promise"
 	],
+	"ignorePatterns": [
+		"build/**",
+		"dist/**",
+		"node_modules/**",
+		"tests/**"
+	],
 	"env": {
 		"browser": true,
 		"node": true

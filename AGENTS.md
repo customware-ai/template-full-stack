@@ -50,7 +50,7 @@ This codebase follows strict architectural patterns and coding standards:
 - No `any` types allowed - use `unknown` (if absolutely necessary) or proper types (almost always from zod schemas)
 - Never use `@ts-nocheck` or any file-level TypeScript disabling directive. If TypeScript reports errors, fix the root cause instead of silencing the compiler.
 - Use Zod schemas for runtime validation always, derive TypeScript types from schemas without duplicating types
-- Full type checking must pass before committing
+- Full static validation must pass before committing
 
 ### 2. **Clean Architecture**
 
@@ -161,10 +161,9 @@ pnpm run start         # Run production Hono server
 pnpm run start:e2e     # Start built server against .dbs/e2e.db
 pnpm run db:generate   # Generate Drizzle SQL migrations from schema changes
 pnpm run db:migrate    # Run server database migrations
-pnpm run typecheck     # TypeScript checking + React Router typegen
-pnpm run lint          # Type-aware linting with oxlint
+pnpm run lint          # Type-aware linting with TypeScript diagnostics
 pnpm test              # Run all tests with Vitest
-pnpm run check         # Run typecheck + lint
+pnpm run check         # Full static report check: React Router typegen + lint
 pnpm run prepare:e2e   # Rebuild .dbs/e2e.db with migrations and deterministic seed data
 pnpm run e2e           # Build and run Playwright E2E with Playwright-owned lifecycle
 ```
@@ -313,10 +312,10 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
    - A task is not complete until the required test decision is recorded and any warranted targeted tests pass
 
 3. **Validation Before Completion**
-   - Run checks only at the very end of the task (right before marking it complete). Use focused validation based on the scope of changes (e.g. `pnpm run typecheck` when only TypeScript/types are modified, `pnpm test` when tests are updated, `pnpm run lint` for lint-focused refactors). Skip checks for non-code-only changes (e.g. Markdown/docs, copy, comments, or other non-executable content).
-   - Run `pnpm run check` at the very end only when multiple areas are updated
-   - This runs: typecheck + lint
-   - Use `pnpm run check` as the static-analysis gate so obvious type and lint errors are fixed before deeper verification
+   - Run checks only at the very end of the task (right before marking it complete). Use `pnpm run lint` for focused static/backend checks. Use `pnpm run check` for full repo report checks. Skip checks for non-code-only changes (e.g. Markdown/docs, copy, comments, or other non-executable content).
+   - `pnpm run lint` runs Oxlint with TypeScript diagnostics.
+   - `pnpm run check` runs React Router typegen and then `pnpm run lint`; for full static validation, run only `pnpm run check`.
+   - Use `pnpm run check` as the full static-analysis gate so obvious type and lint errors are fixed before deeper verification
    - For any database schema or migration change, run `pnpm run db:generate` before completion and treat any unexpected follow-up migration file as a bug that must be fixed
    - For any database schema or migration change, the repository must end in a state where `pnpm run db:generate` reports no unexpected schema drift; if publish runs a generate step before migrate, a locally healthy `db:migrate` result alone is not sufficient
    - After `pnpm run check` passes for user-facing code changes, run interactive Playwright verification for the changed flow and fix/retry until it passes
@@ -978,7 +977,7 @@ Re-read files anytime especially when the conversation is compacted:
 ### Rules
 
 - Always call task_complete - never delete task files manually
-- Run checks only at the very end of each task: use the narrowest relevant check for scoped changes, and use `pnpm run check` only when multiple areas were updated
+- Run checks only at the very end of each task: use `pnpm run lint` for focused static/backend checks, and use `pnpm run check` for full repo report checks
 - No need to run checks for docs-only/non-code-only updates (e.g. Markdown/docs, copy, comments, or other non-executable content)
 - If you feel the conversation is getting long, do NOT summarize and stop - keep executing task
 

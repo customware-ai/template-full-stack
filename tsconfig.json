@@ -1,8 +1,14 @@
 {
 	"include": [
-		"**/.server/**/*",
-		"**/.client/**/*",
+		"app/**/*",
+		"server/**/*",
 		".react-router/types/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"build",
+		"tests",
+		"dist"
 	],
 	"compilerOptions": {
 		"lib": [
