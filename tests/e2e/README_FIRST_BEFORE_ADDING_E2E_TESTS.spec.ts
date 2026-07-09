@@ -1,39 +1,7 @@
 import { existsSync } from "node:fs";
-import BetterSqlite3 from "better-sqlite3";
 import { expect, test } from "@playwright/test";
 import { getE2EDatabaseFilePath } from "./database";
-
-/**
- * Demonstrates how future warranted e2e tests can seed deterministic backend
- * state by writing directly to the dedicated Playwright sqlite database before
- * the page loads. This helper is intentionally simple because this file is only
- * a skipped demo, not a requirement to add e2e coverage for every change.
- *
- * REMOVE THIS FILE WHEN THE FIRST ACTUAL E2E TEST IS ADDED.
- */
-function seedImaginaryFeatureState(): void {
-  const databaseFilePath = getE2EDatabaseFilePath();
-  const sqlite = new BetterSqlite3(databaseFilePath);
-
-  sqlite.exec(`
-    CREATE TABLE IF NOT EXISTS demo_saved_views (
-      id TEXT PRIMARY KEY,
-      account_name TEXT NOT NULL,
-      label TEXT NOT NULL
-    );
-  `);
-
-  sqlite
-    .prepare(
-      `
-        INSERT OR REPLACE INTO demo_saved_views (id, account_name, label)
-        VALUES (?, ?, ?)
-      `,
-    )
-    .run("demo-view-1", "BarkBilt", "Priority Opportunities");
-
-  sqlite.close();
-}
+import { SEEDED_E2E_ESTIMATE } from "./seed";
 
 test.describe("demo e2e format", () => {
   test.skip("shows how an imaginary saved-view feature would be tested end to end", async ({
@@ -44,8 +12,6 @@ test.describe("demo e2e format", () => {
     // REMOVE THIS FILE WHEN THE FIRST ACTUAL E2E TEST IS ADDED.
     // REPLACE IT ONLY WHEN A CORE OR COMPLEX USER FLOW WARRANTS E2E COVERAGE.
 
-    seedImaginaryFeatureState();
-
     await page.goto("/");
 
     // Imagine the real UI exposed a saved-view launcher in the shell.
@@ -55,9 +21,9 @@ test.describe("demo e2e format", () => {
     // Imagine the frontend then rendered a filtered workspace scoped to the
     // seeded backend record from the dedicated Playwright database.
     await expect(
-      page.getByRole("heading", { name: "Priority Opportunities" }),
+      page.getByRole("heading", { name: SEEDED_E2E_ESTIMATE.project_name }),
     ).toBeVisible();
-    await expect(page.getByText("BarkBilt")).toBeVisible();
+    await expect(page.getByText(SEEDED_E2E_ESTIMATE.account_name)).toBeVisible();
     expect(existsSync(getE2EDatabaseFilePath())).toBe(true);
   });
 });

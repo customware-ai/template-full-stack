@@ -158,13 +158,15 @@ pnpm run build         # Build client + compile server TypeScript
 pnpm run build:client  # Build React Router client output
 pnpm run build:server  # Compile server TypeScript only
 pnpm run start         # Run production Hono server
+pnpm run start:e2e     # Start built server against .dbs/e2e.db
 pnpm run db:generate   # Generate Drizzle SQL migrations from schema changes
 pnpm run db:migrate    # Run server database migrations
 pnpm run typecheck     # TypeScript checking + React Router typegen
 pnpm run lint          # Type-aware linting with oxlint
 pnpm test              # Run all tests with Vitest
 pnpm run check         # Run typecheck + lint
-pnpm run build && pnpm exec playwright test tests/e2e/path/spec.ts 
+pnpm run prepare:e2e   # Rebuild .dbs/e2e.db with migrations and deterministic seed data
+pnpm run e2e           # Build and run Playwright E2E with Playwright-owned lifecycle
 ```
 
 To run a single test file:
@@ -172,29 +174,33 @@ To run a single test file:
 ```bash
 pnpm exec vitest run tests/unit/db/db.test.ts
 
+pnpm run build
 pnpm exec playwright test tests/e2e/path/spec.ts
 ```
+
+For helper-owned E2E runs, the helper must build first, run `pnpm run prepare:e2e`, start the server with `pnpm run start:e2e`, then run Playwright with `PLAYWRIGHT_EXTERNAL_SERVER=1 pnpm exec playwright test tests/e2e/path/spec.ts`.
 
 
 ### Dependency Baseline
 
 **Framework/runtime dependencies (current):**
 
-- `react-router@7.15.1` + `@react-router/dev@7.15.1` + `@react-router/node@7.15.1`
-- `vite@8.0.14` (with override pinned), `@vitejs/plugin-react@6.0.2`
-- `hono@^4.12.22`, `@hono/node-server@^2.0.4`, `@hono/trpc-server@^0.4.2`
+- `react-router@7.18.0` + `@react-router/dev@7.18.0` + `@react-router/node@7.18.0`
+- `vite@8.0.16` (with override pinned), `@vitejs/plugin-react@6.0.2`
+- `hono@^4.12.25`, `@hono/node-server@^2.0.5`, `@hono/trpc-server@^0.4.2`
 - `@trpc/server@^11.17.0`, `@trpc/client@^11.17.0`, `@trpc/react-query@^11.17.0`
-- `@tanstack/react-query@^5.100.14`
-- `better-sqlite3@^12.10.0`
+- `@tanstack/react-query@^5.101.0`
+- `better-sqlite3@^12.11.1`
 - `drizzle-orm@^0.45.2`
 - `zod@^4.4.3`, `neverthrow@8.2.0`
 
 **Testing/lint/tooling dependencies (current):**
 
-- `vitest@4.1.7`, `@testing-library/react@16.3.2`, `@testing-library/user-event@14.6.1`
-- `oxlint@1.66.0`, `oxlint-tsgolint@0.23.0`
+- `vitest@4.1.9`, `@testing-library/react@16.3.2`, `@testing-library/user-event@14.6.1`
+- `@playwright/test@1.59.1`, `playwright@1.59.1`
+- `oxlint@1.70.0`, `oxlint-tsgolint@0.24.0`
 - `drizzle-kit@^0.31.10`
-- `typescript@6.0.3`, `tsx@4.22.3`
+- `typescript@7.0.1-rc`, `tsx@4.22.4`
 
 ## Architecture
 
@@ -316,7 +322,7 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
    - After `pnpm run check` passes for user-facing code changes, run interactive Playwright verification for the changed flow and fix/retry until it passes
    - Interactive Playwright is the user-perspective gate and should be treated as the source of truth for whether the changed flow behaves correctly in the UI
    - After interactive verification passes, create, modify, remove, or skip targeted unit/component/integration tests according to the minimal coverage decision
-   - If E2E is warranted, run `pnpm run build && pnpm exec playwright test <spec>` for only the targeted changed flow
+   - If E2E is warranted, use `pnpm run prepare:e2e`, helper-owned server startup with `pnpm run start:e2e`, and `PLAYWRIGHT_EXTERNAL_SERVER=1 pnpm exec playwright test <spec>` for only the targeted changed flow. `pnpm run e2e` remains the Playwright-owned lifecycle path.
    - If the production build reports chunks over the configured warning limit, inspect whether the warning comes from a large route, component file, or external package that should be behind `import()`/`React.lazy` before accepting the warning
    - Warranted targeted automated tests come after interactive verification so they capture the behavior that was just confirmed from the user perspective
    - ALL checks must pass before considering task complete
@@ -437,8 +443,9 @@ export async function createUser(data: unknown): Promise<Result<User, Error>> {
 
 - The actual app database path is always `.dbs/database.db`. This is the production/user-data database path.
 - The Playwright/E2E database path is always controlled by `E2E_DATABASE_FILE_PATH`, as wired in `tests/e2e/database.ts`.
-- Unit, integration, interactive Playwright, and E2E verification must never read from, write to, migrate, seed, reset, truncate, or inspect `.dbs/database.db`.
-- Test and verification code must use `.dbs/e2e.db` through `E2E_DATABASE_FILE_PATH`, the unit-test fallback in `server/db/index.ts`, or a clearly isolated temporary sqlite file created only for that test.
+- Unit, integration, interactive Playwright, and E2E verification must never write to, migrate, seed, reset, truncate, delete, or manipulate `.dbs/database.db`.
+- Read-only inspection of `.dbs/database.db` is allowed when needed to understand existing data, diagnose current app state, or derive deterministic E2E seed data. Any copied/derived seed data must be written only through isolated E2E setup, never back into `.dbs/database.db`.
+- Test and verification code must use `.dbs/e2e.db` through `E2E_DATABASE_FILE_PATH`, `pnpm run prepare:e2e`, the unit-test fallback in `server/db/index.ts`, or a clearly isolated temporary sqlite file created only for that test.
 - `.dbs/database.db` is only for actual app runtime data and intentional app database migration commands such as `pnpm run db:migrate`. It is not a verification sandbox.
 - Never change these paths, rename them, move them, introduce alternate defaults, or make migrations point somewhere else.
 - Drizzle migration scripts are set up to run against `.dbs/database.db` by default. That is intentional and must remain true.
@@ -451,6 +458,9 @@ export async function createUser(data: unknown): Promise<Result<User, Error>> {
 3. Use Drizzle migrations for all schema changes
 4. Never modify the database schema directly in production
 5. Never point tests, Playwright, fixture setup, or verification helpers at `.dbs/database.db`
+6. Use `pnpm run prepare:e2e` as the shared deterministic setup for interactive Playwright scripts and E2E specs.
+7. Use `pnpm run start:e2e` for helper-owned server startup against isolated E2E state.
+8. When an external lifecycle helper owns setup and server startup, run Playwright with `PLAYWRIGHT_EXTERNAL_SERVER=1` so Playwright does not rerun global setup or start a second server.
 
 **Migration System:**
 
@@ -470,7 +480,8 @@ When creating a new migration:
 2. **Review** generated SQL in `server/db/migrations/`
 3. **Run** migrations: `pnpm run db:migrate`
 4. **Verify** and test
-   - Check `.dbs/database.db` was updated only for the intentional app database migration command
+   - Verify the migration command output completed successfully
+   - Read-only inspection of `.dbs/database.db` is allowed when needed to confirm the intentional app migration result
    - Verify tables/columns were created correctly
    - Run any warranted tests against `.dbs/e2e.db` or an isolated temporary sqlite database, never against `.dbs/database.db`
 
@@ -563,7 +574,11 @@ tests/
 │   ├── components/      # UI component tests
 │   ├── db/              # Database operation tests
 │   └── services/        # Business logic tests
-└── e2e/                 # Playwright end-to-end tests
+└── e2e/                 # Playwright end-to-end tests and deterministic E2E setup
+    ├── database.ts      # Isolated .dbs/e2e.db path and prepare helper
+    ├── prepare.ts       # CLI entrypoint for pnpm run prepare:e2e
+    ├── seed.ts          # Canonical deterministic seed data
+    └── server-start.mjs # Built-server startup wired to isolated E2E DB
 ```
 
 **Structure Principles:**

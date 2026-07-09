@@ -81,18 +81,18 @@ The current state is seeded for development and demonstration. It is not a produ
 
 | Package               | Version  | Purpose                         |
 | --------------------- | -------- | ------------------------------- |
-| react-router          | 7.15.1   | Client routing framework        |
-| vite                  | 8.0.14   | Build tool                      |
-| hono                  | ^4.12.22 | HTTP server                     |
+| react-router          | 7.18.0   | Client routing framework        |
+| vite                  | 8.0.16   | Build tool                      |
+| hono                  | ^4.12.25 | HTTP server                     |
 | @trpc/server          | ^11.17.0 | Type-safe API layer             |
 | @trpc/react-query     | ^11.17.0 | Typed client hooks              |
-| @tanstack/react-query | ^5.100.14 | Query/mutation state management |
-| tailwindcss           | 4.3.0    | Styling                         |
+| @tanstack/react-query | ^5.101.0 | Query/mutation state management |
+| tailwindcss           | 4.3.1    | Styling                         |
 | zod                   | 4.4.3    | Runtime validation              |
 | neverthrow            | 8.2.0    | Type-safe error handling        |
-| vitest                | 4.1.7    | Unit/integration test framework |
-| oxlint                | 1.66.0   | Type-aware linting              |
-| better-sqlite3        | ^12.10.0 | SQLite runtime                  |
+| vitest                | 4.1.9    | Unit/integration test framework |
+| oxlint                | 1.70.0   | Type-aware linting              |
+| better-sqlite3        | ^12.11.1 | SQLite runtime                  |
 | drizzle-orm           | ^0.45.2  | ORM and query builder           |
 | drizzle-kit           | ^0.31.10 | Migration generation            |
 
@@ -159,12 +159,17 @@ server/
 └── start.ts                   # Server entrypoint
 
 tests/
-├── components/                # UI component tests
-├── db/                        # DB behavior tests
-├── layouts/                   # Layout tests
-├── routes/                    # Route tests
-├── services/                  # Service tests
-└── unit/                      # Shared unit test utilities
+├── e2e/                       # Playwright tests and deterministic E2E setup
+│   ├── database.ts            # Isolated .dbs/e2e.db path and prepare helper
+│   ├── prepare.ts             # CLI entrypoint for pnpm run prepare:e2e
+│   ├── seed.ts                # Canonical deterministic seed data
+│   └── server-start.mjs       # Built-server startup wired to isolated E2E DB
+└── unit/                      # Unit/component/integration tests
+    ├── components/            # UI component tests
+    ├── db/                    # DB behavior tests
+    ├── layouts/               # Layout tests
+    ├── routes/                # Route tests
+    └── services/              # Service tests
 ```
 
 ## 🗄️ Database Architecture
@@ -192,18 +197,23 @@ This keeps one reference domain table for easy adaptation.
 | `pnpm run build:client` | Build client bundle                 |
 | `pnpm run build:server` | Compile server TypeScript             |
 | `pnpm run start`      | Start production Hono server           |
+| `pnpm run start:e2e`  | Start built server against `.dbs/e2e.db` |
 | `pnpm run db:generate`| Generate Drizzle SQL migrations       |
 | `pnpm run db:migrate` | Run migrations                        |
 | `pnpm run typecheck`  | Run TypeScript checks                 |
 | `pnpm run lint`       | Type-aware linting with oxlint         |
 | `pnpm test`           | Run Vitest suite                      |
 | `pnpm run check`      | Run `typecheck` and `lint`            |
+| `pnpm run prepare:e2e` | Rebuild `.dbs/e2e.db` with migrations and deterministic seed data |
+| `pnpm run e2e`        | Build and run Playwright E2E specs    |
 
 ## 🧪 Testing
 
 ```bash
 pnpm test
 pnpm run check
+pnpm run prepare:e2e
+pnpm run e2e
 ```
 
 - UI/component tests
@@ -212,6 +222,8 @@ pnpm run check
 - Service-layer tests
 
 Unit tests use Vitest for core behavior, stable contracts, and meaningful regressions. Playwright e2e is reserved for core or complex user workflows. The included tests are samples of minimal warranted coverage, not a requirement to test every component prop, style, or UI tweak.
+
+Interactive Playwright scripts and E2E specs should share the same deterministic setup. Use `pnpm run prepare:e2e` to rebuild `.dbs/e2e.db` with migrations and canonical seed data, then use `pnpm run start:e2e` when a lifecycle helper owns server startup. When an external lifecycle helper already owns setup and server startup, run Playwright with `PLAYWRIGHT_EXTERNAL_SERVER=1`; that disables Playwright global setup and Playwright `webServer` so the helper remains the lifecycle owner.
 
 ## 🏗️ Example Module
 

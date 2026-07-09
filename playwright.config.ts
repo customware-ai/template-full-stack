@@ -1,14 +1,18 @@
 import { defineConfig } from "@playwright/test";
-import { E2E_DATABASE_FILE_PATH } from "./tests/e2e/database";
+
+const playwrightPort = process.env.PLAYWRIGHT_PORT ?? "4444";
+const playwrightBaseUrl =
+  process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${playwrightPort}`;
+const helperOwnsSetupAndServer = process.env.PLAYWRIGHT_EXTERNAL_SERVER === "1";
 
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: false,
   workers: 1,
   timeout: 60_000,
-  globalSetup: "./tests/e2e/global-setup.ts",
+  globalSetup: helperOwnsSetupAndServer ? undefined : "./tests/e2e/global-setup.ts",
   use: {
-    baseURL: "http://127.0.0.1:4444",
+    baseURL: playwrightBaseUrl,
     browserName: "chromium",
     launchOptions: {
       args: [
@@ -20,15 +24,20 @@ export default defineConfig({
     },
     trace: "on-first-retry",
   },
-  webServer: {
-    command: "PORT=4444 node build/server/start.js",
-    env: {
-      ...process.env,
-      E2E_DATABASE_FILE_PATH: E2E_DATABASE_FILE_PATH,
-      PORT: "4444",
-    },
-    url: "http://127.0.0.1:4444",
-    reuseExistingServer: false,
-    timeout: 120_000,
-  },
+  ...(helperOwnsSetupAndServer
+    ? {}
+    : {
+        webServer: {
+          command: `PLAYWRIGHT_PORT=${playwrightPort} PORT=${playwrightPort} pnpm run start:e2e`,
+          env: {
+            ...process.env,
+            PORT: playwrightPort,
+            PLAYWRIGHT_BASE_URL: playwrightBaseUrl,
+            PLAYWRIGHT_PORT: playwrightPort,
+          },
+          url: playwrightBaseUrl,
+          reuseExistingServer: false,
+          timeout: 120_000,
+        },
+      }),
 });
