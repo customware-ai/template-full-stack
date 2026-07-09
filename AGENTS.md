@@ -181,28 +181,6 @@ pnpm exec playwright test tests/e2e/path/spec.ts
 
 For helper-owned E2E runs, the helper must build first, run `pnpm run prepare:e2e`, start the server with `pnpm run start:e2e`, then run Playwright with `PLAYWRIGHT_EXTERNAL_SERVER=1 pnpm exec playwright test tests/e2e/path/spec.ts`.
 
-
-### Dependency Baseline
-
-**Framework/runtime dependencies (current):**
-
-- `react-router@7.18.0` + `@react-router/dev@7.18.0` + `@react-router/node@7.18.0`
-- `vite@8.1.3` (with override pinned), `@vitejs/plugin-react@6.0.2`
-- `hono@^4.12.25`, `@hono/node-server@^2.0.8`, `@hono/trpc-server@^0.4.2`
-- `@trpc/server@^11.17.0`, `@trpc/client@^11.17.0`, `@trpc/react-query@^11.17.0`
-- `@tanstack/react-query@^5.101.0`
-- `better-sqlite3@^12.11.1`
-- `drizzle-orm@^0.45.2`
-- `zod@^4.4.3`, `neverthrow@8.2.0`
-
-**Testing/lint/tooling dependencies (current):**
-
-- `vitest@4.1.9`, `@testing-library/react@16.3.2`, `@testing-library/user-event@14.6.1`
-- `@playwright/test@1.59.1`, `playwright@1.59.1`
-- `oxlint@1.73.0`, `oxlint-tsgolint@0.24.0`
-- `drizzle-kit@^0.31.10`
-- `typescript@7.0.2`, `tsx@4.22.4`
-
 ## Architecture
 
 This is a React Router v7 SPA with a dedicated Hono+tRPC backend and SQLite persistence using better-sqlite3 + Drizzle ORM.
