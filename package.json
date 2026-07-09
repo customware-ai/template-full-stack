@@ -13,7 +13,6 @@
 		"lint": "oxlint --type-aware --type-check --fix",
 		"check": "react-router typegen && pnpm run lint",
 		"test": "vitest run",
-		"e2e:install": "playwright install",
 		"prepare:e2e": "tsx tests/e2e/prepare.ts",
 		"e2e": "pnpm run build && playwright test",
 		"db:generate": "drizzle-kit generate",
