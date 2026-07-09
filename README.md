@@ -82,19 +82,30 @@ The current state is seeded for development and demonstration. It is not a produ
 | Package               | Version  | Purpose                         |
 | --------------------- | -------- | ------------------------------- |
 | react-router          | 7.18.0   | Client routing framework        |
-| vite                  | 8.0.16   | Build tool                      |
+| @react-router/dev     | 7.18.0   | React Router build tooling      |
+| @react-router/node    | 7.18.0   | React Router server runtime     |
+| vite                  | 8.1.3    | Build tool                      |
+| @vitejs/plugin-react  | 6.0.2    | React plugin for Vite           |
 | hono                  | ^4.12.25 | HTTP server                     |
+| @hono/node-server     | ^2.0.8   | Node adapter for Hono           |
+| @hono/trpc-server     | ^0.4.2   | tRPC adapter for Hono           |
 | @trpc/server          | ^11.17.0 | Type-safe API layer             |
+| @trpc/client          | ^11.17.0 | Type-safe API client            |
 | @trpc/react-query     | ^11.17.0 | Typed client hooks              |
 | @tanstack/react-query | ^5.101.0 | Query/mutation state management |
 | tailwindcss           | 4.3.1    | Styling                         |
 | zod                   | 4.4.3    | Runtime validation              |
 | neverthrow            | 8.2.0    | Type-safe error handling        |
 | vitest                | 4.1.9    | Unit/integration test framework |
-| oxlint                | 1.70.0   | Type-aware linting              |
+| @playwright/test      | 1.59.1   | Browser E2E test runner         |
+| playwright            | 1.59.1   | Browser automation runtime      |
+| oxlint                | 1.73.0   | Type-aware linting              |
+| oxlint-tsgolint       | 0.24.0   | TypeScript diagnostics for lint |
 | better-sqlite3        | ^12.11.1 | SQLite runtime                  |
 | drizzle-orm           | ^0.45.2  | ORM and query builder           |
 | drizzle-kit           | ^0.31.10 | Migration generation            |
+| typescript            | 7.0.2    | TypeScript compiler             |
+| tsx                   | 4.22.4   | TypeScript script runner        |
 
 ## 🎨 Design
 

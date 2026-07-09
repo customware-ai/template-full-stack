@@ -187,8 +187,8 @@ For helper-owned E2E runs, the helper must build first, run `pnpm run prepare:e2
 **Framework/runtime dependencies (current):**
 
 - `react-router@7.18.0` + `@react-router/dev@7.18.0` + `@react-router/node@7.18.0`
-- `vite@8.0.16` (with override pinned), `@vitejs/plugin-react@6.0.2`
-- `hono@^4.12.25`, `@hono/node-server@^2.0.5`, `@hono/trpc-server@^0.4.2`
+- `vite@8.1.3` (with override pinned), `@vitejs/plugin-react@6.0.2`
+- `hono@^4.12.25`, `@hono/node-server@^2.0.8`, `@hono/trpc-server@^0.4.2`
 - `@trpc/server@^11.17.0`, `@trpc/client@^11.17.0`, `@trpc/react-query@^11.17.0`
 - `@tanstack/react-query@^5.101.0`
 - `better-sqlite3@^12.11.1`
@@ -199,9 +199,9 @@ For helper-owned E2E runs, the helper must build first, run `pnpm run prepare:e2
 
 - `vitest@4.1.9`, `@testing-library/react@16.3.2`, `@testing-library/user-event@14.6.1`
 - `@playwright/test@1.59.1`, `playwright@1.59.1`
-- `oxlint@1.70.0`, `oxlint-tsgolint@0.24.0`
+- `oxlint@1.73.0`, `oxlint-tsgolint@0.24.0`
 - `drizzle-kit@^0.31.10`
-- `typescript@7.0.1-rc`, `tsx@4.22.4`
+- `typescript@7.0.2`, `tsx@4.22.4`
 
 ## Architecture
 
