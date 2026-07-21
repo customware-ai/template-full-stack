@@ -332,6 +332,7 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
 - **Functions**: Keep small and focused (single responsibility)
 - **Imports**: Use `~/` path alias for app imports
 - **Large frontend imports**: Any route, component file, or external package that is likely to add about 50 kB or more to a client chunk must be loaded behind `import()`/`React.lazy` unless it is required for the first paint. Examples include charting packages (`recharts`), data-grid/table engines (`@tanstack/react-table`), rich editors, maps, PDF viewers, analytics dashboards, and large demo/reference surfaces. Add a short comment at the lazy boundary explaining that the import must stay lazy because the dependency is large.
+- **Avoid barrel exports**: Do not add barrel export files or aggregate modules that re-export other modules, especially `export *`. Prefer direct imports from the defining module so tree-shaking and bundle splitting can work at the module boundary. The `oxc/no-barrel-file` Oxlint rule is enabled as an error for large `export *` barrels; treat smaller barrel files as disallowed by project convention as well.
 - **Formatting**: Let Prettier handle formatting (configured in project)
 
 ### Key Patterns
@@ -883,12 +884,9 @@ Every route module should export:
 
 ### Linting Rules
 
-oxlint enforces strict standards:
+oxlint enforces strict standards. All violations must be fixed before marking complete.
 
-- `typescript/explicit-function-return-type`: Required on all functions
-- `typescript/no-explicit-any`: No `any` types allowed
-- `react/jsx-key`: Keys required in JSX lists
-- All violations must be fixed before committing
+Checkout the [oxlint config](./.oxlintrc.json) for details on rules when needed.
 
 ### Testing Patterns
 
