@@ -886,6 +886,8 @@ Every route module should export:
 
 oxlint enforces strict standards. All violations must be fixed before marking complete.
 
+- Never disable any Oxlint rule. Do not use `oxlint-disable` comments at the file, block, or line level, and do not weaken the Oxlint configuration, ignore patterns, or lint scripts to hide violations. Fix the underlying code instead.
+
 Checkout the [oxlint config](./.oxlintrc.json) for details on rules when needed.
 
 ### Testing Patterns
