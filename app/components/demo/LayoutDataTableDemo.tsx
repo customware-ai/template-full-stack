@@ -1,21 +1,19 @@
 "use client";
 
 import { type ReactElement, useState } from "react";
-import { type SortingState, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-import { columns, tableData } from "~/components/demo/shared";
+import { type SortingState, flexRender, useTable } from "@tanstack/react-table";
+import { columns, dealTableFeatures, tableData } from "~/components/demo/shared";
 import { Button } from "~/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 
 export function LayoutDataTableDemo(): ReactElement {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const table = useReactTable({
+  const table = useTable({
+    features: dealTableFeatures,
     data: tableData,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
@@ -38,7 +36,7 @@ export function LayoutDataTableDemo(): ReactElement {
           <TableBody>
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
+                {row.getAllCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {cell.column.columnDef.cell
                       ? flexRender(cell.column.columnDef.cell, cell.getContext())

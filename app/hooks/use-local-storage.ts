@@ -182,10 +182,10 @@ export function useLocalStorage<TValue>(
 ): readonly [TValue, (nextValue: LocalStorageStateUpdater<TValue>) => void, boolean] {
 	const defaultValueRef = useRef(defaultValue);
 	const clientSnapshotRef = useRef<LocalStorageStoreSnapshot<TValue>>(
-		createStoreSnapshot(null, defaultValueRef.current, false),
+		createStoreSnapshot(null, defaultValue, false),
 	);
 	const serverSnapshotRef = useRef<LocalStorageStoreSnapshot<TValue>>(
-		createStoreSnapshot(null, defaultValueRef.current, false),
+		createStoreSnapshot(null, defaultValue, false),
 	);
 
 	/**

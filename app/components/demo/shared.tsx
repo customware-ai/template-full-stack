@@ -1,6 +1,13 @@
 "use client";
 
-import { type ColumnDef } from "@tanstack/react-table";
+import {
+  createColumnHelper,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  rowPaginationFeature,
+  rowSortingFeature,
+  tableFeatures,
+} from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { type ChartConfig } from "~/components/ui/chart";
 import { cn } from "~/lib/utils";
@@ -31,12 +38,21 @@ export const tableData: DealRow[] = [
   { account: "Axis Retail", owner: "Jin", stage: "Approved", value: "$194k" },
 ];
 
-export const columns: ColumnDef<DealRow>[] = [
-  { accessorKey: "account", header: "Account" },
-  { accessorKey: "owner", header: "Owner" },
-  { accessorKey: "stage", header: "Stage" },
-  { accessorKey: "value", header: "Value" },
-];
+export const dealTableFeatures = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+});
+
+const dealColumnHelper = createColumnHelper<typeof dealTableFeatures, DealRow>();
+
+export const columns = dealColumnHelper.columns([
+  dealColumnHelper.accessor("account", { header: "Account" }),
+  dealColumnHelper.accessor("owner", { header: "Owner" }),
+  dealColumnHelper.accessor("stage", { header: "Stage" }),
+  dealColumnHelper.accessor("value", { header: "Value" }),
+]);
 
 export function Section({
   title,

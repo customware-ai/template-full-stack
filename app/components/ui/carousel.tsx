@@ -42,13 +42,39 @@ function Carousel({
   ...props
 }: CarouselProps): React.ReactElement {
   const [carouselRef, api] = useEmblaCarousel(opts)
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false)
-  const [canScrollNext, setCanScrollNext] = React.useState(false)
 
-  const onSelect = React.useCallback((emblaApi: EmblaCarouselType): void => {
-    setCanScrollPrev(emblaApi.canScrollPrev())
-    setCanScrollNext(emblaApi.canScrollNext())
-  }, [])
+  const subscribeToNavigation = React.useCallback(
+    (onStoreChange: () => void): (() => void) => {
+      if (!api) {
+        return (): void => undefined
+      }
+
+      api.on("reInit", onStoreChange)
+      api.on("select", onStoreChange)
+
+      return (): void => {
+        api.off("reInit", onStoreChange)
+        api.off("select", onStoreChange)
+      }
+    },
+    [api],
+  )
+
+  const getNavigationSnapshot = React.useCallback((): number => {
+    if (!api) {
+      return 0
+    }
+
+    return Number(api.canScrollPrev()) | (Number(api.canScrollNext()) << 1)
+  }, [api])
+
+  const navigationSnapshot = React.useSyncExternalStore(
+    subscribeToNavigation,
+    getNavigationSnapshot,
+    (): number => 0,
+  )
+  const canScrollPrev = (navigationSnapshot & 1) !== 0
+  const canScrollNext = (navigationSnapshot & 2) !== 0
 
   const scrollPrev = React.useCallback((): void => {
     api?.scrollPrev()
@@ -64,15 +90,7 @@ function Carousel({
     }
 
     setApi?.(api)
-    onSelect(api)
-    api.on("reInit", onSelect)
-    api.on("select", onSelect)
-
-    return (): void => {
-      api.off("reInit", onSelect)
-      api.off("select", onSelect)
-    }
-  }, [api, onSelect, setApi])
+  }, [api, setApi])
 
   return (
     <CarouselContext.Provider value={{ carouselRef, api, scrollPrev, scrollNext, canScrollPrev, canScrollNext }}>
