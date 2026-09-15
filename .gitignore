@@ -17,5 +17,6 @@ logs/
 /.react-router/
 /build/
 /dist/
+/.vitest/
 
 .tasks/

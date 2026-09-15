@@ -161,9 +161,9 @@ pnpm run start         # Run production Hono server
 pnpm run start:e2e     # Start built server against .dbs/e2e.db
 pnpm run db:generate   # Generate Drizzle SQL migrations from schema changes
 pnpm run db:migrate    # Run server database migrations
-pnpm run lint          # Type-aware linting with TypeScript diagnostics
+pnpm run lint          # React Router typegen + type-aware Oxlint diagnostics
 pnpm test              # Run all tests with Vitest
-pnpm run check         # Full static report check: React Router typegen + lint
+pnpm run check         # Run the full static-analysis lint script
 pnpm run prepare:e2e   # Rebuild .dbs/e2e.db with migrations and deterministic seed data
 pnpm run e2e           # Build and run Playwright E2E with Playwright-owned lifecycle
 ```
@@ -292,9 +292,9 @@ const createCustomerMutation = trpc.createCustomer.useMutation();
    - A task is not complete until the required test decision is recorded and any warranted targeted tests pass
 
 3. **Validation Before Completion**
-   - Run checks only at the very end of the task (right before marking it complete). Use `pnpm run lint` for focused static/backend checks. Use `pnpm run check` for full repo report checks. Skip checks for non-code-only changes (e.g. Markdown/docs, copy, comments, or other non-executable content).
-   - `pnpm run lint` runs Oxlint with TypeScript diagnostics.
-   - `pnpm run check` runs React Router typegen and then `pnpm run lint`; for full static validation, run only `pnpm run check`.
+   - Run checks only at the very end of the task (right before marking it complete). Use `pnpm run check` as the canonical full-repo static-analysis command. Skip checks for non-code-only changes (e.g. Markdown/docs, copy, comments, or other non-executable content).
+   - `pnpm run lint` runs React Router typegen followed by Oxlint with type-aware TypeScript diagnostics.
+   - `pnpm run check` delegates to `pnpm run lint`, so both commands perform the same full static validation.
    - Use `pnpm run check` as the full static-analysis gate so obvious type and lint errors are fixed before deeper verification
    - For any database schema or migration change, run `pnpm run db:generate` before completion and treat any unexpected follow-up migration file as a bug that must be fixed
    - For any database schema or migration change, the repository must end in a state where `pnpm run db:generate` reports no unexpected schema drift; if publish runs a generate step before migrate, a locally healthy `db:migrate` result alone is not sufficient
@@ -957,7 +957,7 @@ Re-read files anytime especially when the conversation is compacted:
 ### Rules
 
 - Always call task_complete - never delete task files manually
-- Run checks only at the very end of each task: use `pnpm run lint` for focused static/backend checks, and use `pnpm run check` for full repo report checks
+- Run checks only at the very end of each task; use `pnpm run check` as the canonical full-repo static-analysis command
 - No need to run checks for docs-only/non-code-only updates (e.g. Markdown/docs, copy, comments, or other non-executable content)
 - If you feel the conversation is getting long, do NOT summarize and stop - keep executing task
 
