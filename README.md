@@ -84,7 +84,7 @@ The current state is seeded for development and demonstration. It is not a produ
 | react-router          | 7.18.2   | Client routing framework        |
 | @react-router/dev     | 7.18.2   | React Router build tooling      |
 | @react-router/node    | 7.18.2   | React Router server runtime     |
-| vite                  | 8.3.0    | Build tool                      |
+| vite                  | 8.0.16   | Build tool                      |
 | @vitejs/plugin-react  | 6.1.1    | React plugin for Vite           |
 | oxc-transform-react   | 0.150.0  | React compiler transform        |
 | hono                  | 4.13.7   | HTTP server                     |
